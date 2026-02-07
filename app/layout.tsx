@@ -4,8 +4,8 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const geist = Geist({ subsets: ["latin"], variable: '--font-sans' });
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: '--font-mono' });
 
 export const metadata: Metadata = {
   title: 'PowerGlass - Reduce tu factura eléctrica hasta 35% | Firefly Volts',
@@ -36,8 +36,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
+    <html lang="es" className={`${geist.variable} ${geistMono.variable}`}>
+      <body className="font-sans antialiased">
         {children}
         <Analytics />
       </body>
