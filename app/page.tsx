@@ -1,3 +1,5 @@
+'use client'
+
 import { Header } from '@/components/sections/header'
 import { HeroSection } from '@/components/sections/hero-section'
 import { ProblemSection } from '@/components/sections/problem-section'
