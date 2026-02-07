@@ -13,8 +13,11 @@ import { FinalCTA } from '@/components/sections/final-cta'
 import { Footer } from '@/components/sections/footer'
 
 export default function LandingPage() {
+  console.log('[v0] LandingPage component rendering')
+  
   return (
     <div className="min-h-screen bg-background">
+      <p className="text-4xl p-8">Testing - If you see this, page is loading</p>
       <Header />
       <HeroSection />
       <ProblemSection />
