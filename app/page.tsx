@@ -173,6 +173,149 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Comparador */}
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
+              PowerGlass supera incluso al vidrio doble
+            </h2>
+            <p className="text-xl text-center text-muted-foreground mb-12">
+              Comparación científica de rechazo térmico y protección UV
+            </p>
+
+            {/* Desktop Table */}
+            <div className="hidden lg:block overflow-x-auto mb-12">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-muted">
+                    <th className="p-4 text-left font-semibold">Tipo de Vidrio</th>
+                    <th className="p-4 text-center font-semibold">Rechazo IR</th>
+                    <th className="p-4 text-center font-semibold">Rechazo UV</th>
+                    <th className="p-4 text-center font-semibold">Luz Natural</th>
+                    <th className="p-4 text-center font-semibold">Inversión</th>
+                    <th className="p-4 text-center font-semibold">Instalación</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b">
+                    <td className="p-4 font-medium">Cristal Natural</td>
+                    <td className="p-4 text-center"><span className="font-bold">27.5%</span> <span className="text-red-500">❌</span></td>
+                    <td className="p-4 text-center"><span className="font-bold">19.9%</span> <span className="text-red-500">❌</span></td>
+                    <td className="p-4 text-center"><span className="font-bold">87.2%</span> <span className="text-green-500">✅</span></td>
+                    <td className="p-4 text-center">Base</td>
+                    <td className="p-4 text-center text-muted-foreground">N/A</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="p-4 font-medium">Cristal Temporizado</td>
+                    <td className="p-4 text-center"><span className="font-bold">21.8%</span> <span className="text-red-500">❌</span></td>
+                    <td className="p-4 text-center"><span className="font-bold">54.4%</span> <span className="text-yellow-500">⚠️</span></td>
+                    <td className="p-4 text-center"><span className="font-bold">60.1%</span> <span className="text-yellow-500">⚠️</span></td>
+                    <td className="p-4 text-center">+40%</td>
+                    <td className="p-4 text-center text-muted-foreground">N/A</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="p-4 font-medium">Cristal Doble</td>
+                    <td className="p-4 text-center"><span className="font-bold">84.4%</span> <span className="text-yellow-500">⚠️</span></td>
+                    <td className="p-4 text-center"><span className="font-bold">79.2%</span> <span className="text-yellow-500">⚠️</span></td>
+                    <td className="p-4 text-center"><span className="font-bold">64.6%</span> <span className="text-yellow-500">⚠️</span></td>
+                    <td className="p-4 text-center">+150%</td>
+                    <td className="p-4 text-center">Obra civil</td>
+                  </tr>
+                  <tr className="bg-blue-50 border-b-2 border-primary">
+                    <td className="p-4 font-bold">PowerGlass</td>
+                    <td className="p-4 text-center"><span className="font-bold">92.6%</span> <span className="text-green-500">✅</span></td>
+                    <td className="p-4 text-center"><span className="font-bold">97.7%</span> <span className="text-green-500">✅</span></td>
+                    <td className="p-4 text-center"><span className="font-bold">71.7%</span> <span className="text-green-500">✅</span></td>
+                    <td className="p-4 text-center font-bold">+60%</td>
+                    <td className="p-4 text-center font-bold">1 día sin obra</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="lg:hidden space-y-4 mb-12">
+              {[
+                { name: 'Cristal Natural', ir: '27.5%', uv: '19.9%', light: '87.2%', inv: 'Base', inst: 'N/A', highlight: false },
+                { name: 'Cristal Temporizado', ir: '21.8%', uv: '54.4%', light: '60.1%', inv: '+40%', inst: 'N/A', highlight: false },
+                { name: 'Cristal Doble', ir: '84.4%', uv: '79.2%', light: '64.6%', inv: '+150%', inst: 'Obra civil', highlight: false },
+                { name: 'PowerGlass', ir: '92.6%', uv: '97.7%', light: '71.7%', inv: '+60%', inst: '1 día sin obra', highlight: true },
+              ].map((item, i) => (
+                <Card key={i} className={item.highlight ? 'border-primary bg-blue-50' : ''}>
+                  <div className="p-6 space-y-3">
+                    <h3 className={`text-xl font-bold mb-4 ${item.highlight ? 'text-primary' : ''}`}>{item.name}</h3>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div><span className="text-muted-foreground">Rechazo IR:</span> <span className="font-bold">{item.ir}</span></div>
+                      <div><span className="text-muted-foreground">Rechazo UV:</span> <span className="font-bold">{item.uv}</span></div>
+                      <div><span className="text-muted-foreground">Luz Natural:</span> <span className="font-bold">{item.light}</span></div>
+                      <div><span className="text-muted-foreground">Inversión:</span> <span className="font-bold">{item.inv}</span></div>
+                      <div className="col-span-2"><span className="text-muted-foreground">Instalación:</span> <span className="font-bold">{item.inst}</span></div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Highlights */}
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="p-6 text-center">
+                <div className="text-green-500 text-3xl mb-2">✅</div>
+                <p className="font-semibold">8% más rechazo de calor que cristal doble</p>
+              </Card>
+              <Card className="p-6 text-center">
+                <div className="text-green-500 text-3xl mb-2">✅</div>
+                <p className="font-semibold">60% del costo vs reemplazar ventanas</p>
+              </Card>
+              <Card className="p-6 text-center">
+                <div className="text-green-500 text-3xl mb-2">✅</div>
+                <p className="font-semibold">Mantiene 7% más luz natural</p>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Qué es PowerGlass */}
+      <section className="py-24 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
+              Nanotecnología térmica profesional
+            </h2>
+            <p className="text-xl text-center text-muted-foreground mb-16">
+              Film multicapa que transforma sus ventanas existentes en barrera térmica inteligente
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              <Card className="p-8 text-center hover:shadow-xl transition-shadow">
+                <div className="text-6xl mb-6">🔬</div>
+                <h3 className="text-2xl font-bold mb-4">Tecnología Avanzada</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  7 capas nanotecnológicas que filtran selectivamente el calor sin bloquear la luz visible
+                </p>
+              </Card>
+
+              <Card className="p-8 text-center hover:shadow-xl transition-shadow">
+                <div className="text-6xl mb-6">⚡</div>
+                <h3 className="text-2xl font-bold mb-4">Instalación Rápida</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Se aplica directamente sobre el vidrio existente. Sin obra, sin polvo, sin interrupciones
+                </p>
+              </Card>
+
+              <Card className="p-8 text-center hover:shadow-xl transition-shadow">
+                <div className="text-6xl mb-6">🛡️</div>
+                <h3 className="text-2xl font-bold mb-4">Protección Total</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Garantía 10 años. Resistente a rayones, agua y temperaturas extremas (-40°C a +80°C)
+                </p>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Calculator */}
       <section id="calculator" className="py-24 bg-muted/30">
         <div className="container mx-auto px-4">
@@ -357,6 +500,87 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Cómo Funciona */}
+      <section className="py-24 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
+              De la visita a la instalación en 48 horas
+            </h2>
+            <p className="text-xl text-center text-muted-foreground mb-16">
+              Proceso profesional sin complicaciones
+            </p>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+              {[
+                {
+                  icon: '🔍',
+                  title: 'Visita Técnica',
+                  items: [
+                    'Evaluación sin costo',
+                    'Medición precisa',
+                    'Análisis de orientación solar',
+                    '30 minutos en sitio',
+                  ],
+                },
+                {
+                  icon: '📊',
+                  title: 'Cotización Personalizada',
+                  items: [
+                    'ROI calculado para su negocio',
+                    'Inversión detallada',
+                    'Proyección de ahorro 5 años',
+                    'Respuesta en 24 horas',
+                  ],
+                },
+                {
+                  icon: '⚡',
+                  title: 'Instalación Profesional',
+                  items: [
+                    'Equipo certificado Power-All',
+                    'Sin detener operaciones',
+                    'Limpieza incluida',
+                    'Completado en 1 día',
+                  ],
+                },
+                {
+                  icon: '🛡️',
+                  title: 'Garantía Extendida',
+                  items: [
+                    '10 años respaldo fabricante',
+                    'Certificado de instalación',
+                    'Soporte técnico continuo',
+                    'Mantenimiento incluido',
+                  ],
+                },
+              ].map((step, i) => (
+                <Card key={i} className="relative p-6 hover:shadow-xl transition-shadow">
+                  <div className="absolute -top-4 left-6 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
+                    {i + 1}
+                  </div>
+                  <div className="text-5xl text-center mb-4 mt-2">{step.icon}</div>
+                  <h3 className="text-xl font-bold text-center mb-4">{step.title}</h3>
+                  <ul className="space-y-2">
+                    {step.items.map((item, j) => (
+                      <li key={j} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <Button size="lg" className="text-lg px-12 py-7 h-auto">
+                SOLICITAR VISITA TÉCNICA GRATIS
+              </Button>
             </div>
           </div>
         </div>
