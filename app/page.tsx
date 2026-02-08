@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -89,19 +88,8 @@ export default function LandingPage() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <svg viewBox="0 0 350 75" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17.85,59.56v-20.52h2.84v20.52h-2.84ZM19.22,41.62v-2.58h11.26v2.58h-11.26ZM19.22,50v-2.52h10.67v2.52h-10.67Z" fill="currentColor"/>
-            <path d="M34.41,59.56v-20.52h2.84v20.52h-2.84Z" fill="currentColor"/>
-            <path d="M43,59.56v-20.52h7.91c1.23,0,2.31.25,3.24.76.93.51,1.65,1.21,2.15,2.1.51.89.76,1.89.76,3s-.27,2.17-.81,3.05c-.54.88-1.3,1.56-2.3,2.05-1,.49-2.17.73-3.52.73h-1.73v-1.29l8.85,10.11h-3.72l-8.44-10.2v-.82h4.46c1.39,0,2.44-.31,3.17-.92.72-.62,1.08-1.48,1.08-2.59s-.33-1.91-.98-2.51c-.66-.6-1.59-.89-2.8-.89h-4.48v17.94h-2.84Z" fill="currentColor"/>
-            <path d="M61.41,59.56v-20.52h2.84v20.52h-2.84ZM62.78,41.62v-2.58h11.26v2.58h-11.26ZM62.78,50v-2.52h10.67v2.52h-10.67ZM62.78,59.56v-2.58h11.4v2.58h-11.4Z" fill="currentColor"/>
-            <path d="M78.73,59.56v-20.52h2.84v20.52h-2.84ZM80.11,41.62v-2.58h11.26v2.58h-11.26ZM80.11,50v-2.52h10.67v2.52h-10.67Z" fill="currentColor"/>
-            <path d="M95.29,59.56v-20.52h2.84v20.52h-2.84ZM96.67,59.56v-2.7h10.82v2.7h-10.82Z" fill="currentColor"/>
-            <path d="M113.29,59.56v-7.68l-7.12-12.84h3.11l6.16,11.37-1.44-.03,6.27-11.34h3.17l-7.3,12.84v7.68h-2.84Z" fill="currentColor"/>
-            <path d="M166.56,41.12v4.2c0,6.98-5.66,12.63-12.64,12.63s-12.64-5.66-12.64-12.63v-4.21c2.66-4.17,7.33-6.93,12.64-6.93s9.99,2.77,12.64,6.94Z" fill="#0a8ee0"/>
-            <path d="M153.91,59.05c-7.57,0-13.73-6.15-13.73-13.72v-24.11c0-.09,0-.17,0-.26.03-1.52.3-3.01.82-4.43.91-2.5,2.53-4.68,4.67-6.29,2.39-1.79,5.24-2.74,8.23-2.74s5.84.95,8.23,2.74c.52.39,1.02.82,1.48,1.28,1.41,1.41,2.52,3.14,3.2,5.01.52,1.42.79,2.92.82,4.44,0,.07,0,.16,0,.25v24.11c0,7.56-6.16,13.72-13.73,13.72ZM153.91,9.67c-2.52,0-4.92.8-6.93,2.3-1.81,1.36-3.17,3.19-3.94,5.29-.44,1.2-.67,2.45-.69,3.73v.02c0,.06,0,.13,0,.2v24.11c0,6.37,5.18,11.55,11.55,11.55s11.56-5.18,11.56-11.55v-24.11c0-.07,0-.13,0-.2-.02-1.3-.25-2.55-.69-3.75-.57-1.57-1.5-3.03-2.69-4.22-.39-.39-.81-.75-1.24-1.08-2.01-1.5-4.41-2.3-6.93-2.3Z" fill="currentColor"/>
-            <polygon points="156.83 36.57 149.6 47.12 153.54 45.96 151 53.23 158.23 42.68 154.28 43.84 156.83 36.57" fill="currentColor"/>
-            <text x="170" y="48" fontSize="32" fontWeight="bold" fill="currentColor" fontFamily="system-ui, -apple-system, sans-serif">Volts</text>
-          </svg>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-header.svg" alt="Firefly Volts" className="h-10 w-auto" />
           <Button size="lg">Contacto</Button>
         </div>
       </header>
