@@ -87,9 +87,12 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-center">
-          <Logo />
+      <header className="fixed top-0 left-0 right-0 z-50">
+        <div className="h-1 bg-primary" />
+        <div className="bg-white/80 backdrop-blur-md border-b border-gray-200">
+          <div className="container mx-auto px-4 h-16 flex items-center justify-center">
+            <Logo />
+          </div>
         </div>
       </header>
 
