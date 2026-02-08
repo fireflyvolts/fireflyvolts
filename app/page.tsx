@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -88,7 +89,7 @@ export default function LandingPage() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <img src="/logo-header.svg" alt="Firefly Volts" className="h-12" />
+          <Image src="/logo-header.svg" alt="Firefly Volts" width={180} height={48} priority className="h-12 w-auto" />
           <Button size="lg">Contacto</Button>
         </div>
       </header>
