@@ -86,10 +86,9 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', borderColor: 'hsl(var(--border))' }}>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-header.svg" alt="Firefly Volts" className="h-10 w-auto" suppressHydrationWarning />
+          <div className="text-2xl font-bold text-foreground">Firefly Volts</div>
           <Button size="lg">Contacto</Button>
         </div>
       </header>
