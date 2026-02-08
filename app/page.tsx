@@ -29,9 +29,10 @@ import {
   Phone,
   Mail,
   MapPin,
+  Home,
 } from 'lucide-react'
 
-type BusinessType = 'hotel' | 'restaurant' | 'office' | null
+type BusinessType = 'hotel' | 'restaurant' | 'office' | 'hogar' | null
 
 export default function LandingPage() {
   const [businessType, setBusinessType] = useState<BusinessType>(null)
@@ -55,10 +56,10 @@ export default function LandingPage() {
     const sqm = parseFloat(squareMeters)
     const bill = parseFloat(monthlyBill)
 
-    const priceMap = { hotel: 360, restaurant: 340, office: 370 }
+    const priceMap = { hotel: 360, restaurant: 340, office: 370, hogar: 380 }
     const pricePerSqm = priceMap[businessType]
 
-    const savingsMap = { hotel: 0.28, restaurant: 0.30, office: 0.25 }
+    const savingsMap = { hotel: 0.28, restaurant: 0.30, office: 0.25, hogar: 0.22 }
     const savingsPercentage = savingsMap[businessType]
 
     const totalSqm = sqm * 1.1
@@ -98,10 +99,14 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center pt-16">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-primary/5" />
+        <div 
+          className="absolute inset-0 opacity-5 bg-cover bg-center"
+          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200)' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-white" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-balance">
+            <h1 className="text-[56px] md:text-[72px] font-bold mb-6 text-balance leading-tight">
               Reduce tu factura eléctrica hasta 35% sin cambiar tus ventanas
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-12">
@@ -110,12 +115,12 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
-                className="text-lg px-8 py-6 h-auto"
+                className="text-lg px-9 py-[18px] h-auto shadow-lg hover:shadow-xl transition-shadow"
                 onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 CALCULAR MI AHORRO
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6 h-auto bg-transparent">
+              <Button size="lg" variant="outline" className="text-lg px-9 py-[18px] h-auto bg-transparent hover:shadow-lg transition-shadow">
                 Ver instalaciones <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
@@ -155,7 +160,7 @@ export default function LandingPage() {
       {/* Stats */}
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
             <div>
               <div className="text-5xl font-black mb-2">500+</div>
               <div className="text-lg opacity-90">Clientes</div>
@@ -171,6 +176,11 @@ export default function LandingPage() {
             <div>
               <div className="text-5xl font-black mb-2">24</div>
               <div className="text-lg opacity-90">Meses ROI</div>
+            </div>
+            <div>
+              <div className="text-4xl font-black mb-2">📍</div>
+              <div className="text-lg opacity-90">Mérida, Yucatán</div>
+              <div className="text-sm opacity-75">Distribuidor Local</div>
             </div>
           </div>
         </div>
@@ -193,9 +203,9 @@ export default function LandingPage() {
                 <thead>
                   <tr className="bg-muted">
                     <th className="p-4 text-left font-semibold">Tipo de Vidrio</th>
-                    <th className="p-4 text-center font-semibold">Rechazo IR</th>
-                    <th className="p-4 text-center font-semibold">Rechazo UV</th>
-                    <th className="p-4 text-center font-semibold">Luz Natural</th>
+                    <th className="p-4 text-center font-semibold"><span className="text-2xl">🔥</span> Rechazo IR</th>
+                    <th className="p-4 text-center font-semibold"><span className="text-2xl">☀️</span> Rechazo UV</th>
+                    <th className="p-4 text-center font-semibold"><span className="text-2xl">💡</span> Luz Natural</th>
                     <th className="p-4 text-center font-semibold">Inversión</th>
                     <th className="p-4 text-center font-semibold">Instalación</th>
                   </tr>
@@ -225,11 +235,11 @@ export default function LandingPage() {
                     <td className="p-4 text-center">+150%</td>
                     <td className="p-4 text-center">Obra civil</td>
                   </tr>
-                  <tr className="bg-blue-50 border-b-2 border-primary">
+                  <tr className="bg-gradient-to-r from-blue-50 to-blue-100 border-b-2 border-primary border-l-4">
                     <td className="p-4 font-bold">PowerGlass</td>
-                    <td className="p-4 text-center"><span className="font-bold">92.6%</span> <span className="text-green-500">✅</span></td>
-                    <td className="p-4 text-center"><span className="font-bold">97.7%</span> <span className="text-green-500">✅</span></td>
-                    <td className="p-4 text-center"><span className="font-bold">71.7%</span> <span className="text-green-500">✅</span></td>
+                    <td className="p-4 text-center"><span className="font-bold text-xl">92.6%</span> <span className="text-green-500 text-2xl">✅</span></td>
+                    <td className="p-4 text-center"><span className="font-bold text-xl">97.7%</span> <span className="text-green-500 text-2xl">✅</span></td>
+                    <td className="p-4 text-center"><span className="font-bold text-xl">71.7%</span> <span className="text-green-500 text-2xl">✅</span></td>
                     <td className="p-4 text-center font-bold">+60%</td>
                     <td className="p-4 text-center font-bold">1 día sin obra</td>
                   </tr>
@@ -319,6 +329,82 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* PowerCoat - Solución Completa */}
+      <section className="py-24 bg-gradient-to-br from-primary to-[#0891d0] text-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
+              ¿Tienes techo grande? Combina con PowerCoat
+            </h2>
+            <p className="text-xl text-center mb-16 opacity-90">
+              Protección térmica completa para tu edificio
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              {/* PowerGlass Column */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 border border-white/20">
+                <div className="text-7xl text-center mb-4">🪟</div>
+                <h3 className="text-3xl font-bold text-center mb-2">PowerGlass</h3>
+                <p className="text-center mb-6 opacity-90">Para ventanas y fachadas de vidrio</p>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                    <span>Rechaza 92.6% del calor solar</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                    <span>Protección UV 97.7%</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                    <span>Instalación en 1 día</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                    <span className="font-semibold">Ideal para: Oficinas, restaurantes, hoteles</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* PowerCoat Column */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 border border-white/20">
+                <div className="text-7xl text-center mb-4">🏢</div>
+                <h3 className="text-3xl font-bold text-center mb-2">PowerCoat</h3>
+                <p className="text-center mb-6 opacity-90">Recubrimiento térmico para techos</p>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                    <span>Reduce temperatura techo hasta 15°C</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                    <span>Refleja calor antes de entrar</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                    <span>Aplicación sobre cualquier superficie</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                    <span className="font-semibold">Ideal para: Bodegas, naves industriales, centros comerciales</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <p className="text-2xl font-bold text-center mb-8">
+              Combina ambas soluciones y reduce hasta 50% tu factura eléctrica
+            </p>
+
+            <div className="text-center">
+              <Button size="lg" className="bg-white text-primary hover:bg-gray-100 text-lg px-12 py-7 h-auto shadow-xl">
+                COTIZAR SOLUCIÓN COMPLETA
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Calculator */}
       <section id="calculator" className="py-24 bg-muted/30">
         <div className="container mx-auto px-4">
@@ -327,7 +413,7 @@ export default function LandingPage() {
 
             <div className="mb-10">
               <Label className="text-lg mb-4 block">Tipo de Negocio</Label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Button
                   size="lg"
                   variant={businessType === 'hotel' ? 'default' : 'outline'}
@@ -355,14 +441,28 @@ export default function LandingPage() {
                   <Building2 className="w-6 h-6 mr-2" />
                   Oficina
                 </Button>
+                <Button
+                  size="lg"
+                  variant={businessType === 'hogar' ? 'default' : 'outline'}
+                  className="h-20 text-lg"
+                  onClick={() => setBusinessType('hogar')}
+                >
+                  <Home className="w-6 h-6 mr-2" />
+                  Hogar
+                </Button>
               </div>
+              {businessType === 'hogar' && (
+                <p className="mt-4 text-center text-muted-foreground">
+                  Para hogares: Protege a tu familia del calor. Reduce costos de aire acondicionado.
+                </p>
+              )}
             </div>
 
             <div className="grid md:grid-cols-2 gap-8 mb-10">
               <div>
                 <Label className="text-lg mb-4 flex items-center gap-2">
                   <Ruler className="w-5 h-5" />
-                  Metros cuadrados de vidrio
+                  {businessType === 'hogar' ? 'Metros cuadrados de ventanas en tu casa' : 'Metros cuadrados de vidrio'}
                 </Label>
                 <Input
                   type="number"
@@ -375,7 +475,7 @@ export default function LandingPage() {
               <div>
                 <Label className="text-lg mb-4 flex items-center gap-2">
                   <Lightbulb className="w-5 h-5" />
-                  Factura de luz mensual (MXN)
+                  {businessType === 'hogar' ? 'Tu factura de luz mensual (MXN)' : 'Factura de luz mensual (MXN)'}
                 </Label>
                 <Input
                   type="number"
