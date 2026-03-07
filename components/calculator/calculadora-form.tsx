@@ -5,8 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card } from '@/components/ui/card'
-import { Hotel, UtensilsCrossed, Building2, Home, Ruler, Lightbulb, Rocket, DollarSign, TrendingDown, Clock, ArrowRight, CheckCircle2 } from 'lucide-react'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { Hotel, UtensilsCrossed, Building2, Home, Ruler, Lightbulb, Rocket, DollarSign, TrendingDown, Clock } from 'lucide-react'
 
 type BusinessType = 'hotel' | 'restaurant' | 'office' | 'hogar' | null
 
@@ -21,10 +20,6 @@ export function CalculadoraForm() {
     monthlySavings: 0,
     roiMonths: 0,
     annualSavings: 0,
-    fiveYearSavings: 0,
-    pricePerSqm: 0,
-    installationPerSqm: 200,
-    totalSqm: 0,
     savingsPercentage: 0,
   })
 
@@ -36,33 +31,36 @@ export function CalculadoraForm() {
     const sqm = parseFloat(squareMeters)
     const bill = parseFloat(monthlyBill)
 
-    // Precio fijo para todos los tipos de negocio
-    const pricePerSqm = 750 // $750 MXN por m² de material
-    const installationPerSqm = 200 // $200 MXN por m² de instalación
+    // Precio por m2 segun rango de metros cuadrados
+    let pricePerSqm: number
+    if (sqm <= 10) {
+      pricePerSqm = 952
+    } else if (sqm <= 100) {
+      pricePerSqm = 858
+    } else {
+      pricePerSqm = 763
+    }
 
-    const savingsMap = { hotel: 0.28, restaurant: 0.30, office: 0.25, hogar: 0.22 }
+    const installationPerSqm = 200
+
+    // Porcentajes de ahorro actualizados
+    const savingsMap = { hotel: 0.32, restaurant: 0.33, office: 0.27, hogar: 0.25 }
     const savingsPercentage = savingsMap[businessType]
 
-    // Aplicar 10% de merma sobre los metros cuadrados
-    const totalSqm = sqm * 1.1
-    const materialCost = totalSqm * pricePerSqm
-    const installationCost = sqm * installationPerSqm // Instalación sin merma
+    // Inversion total = (metros x precio) + (metros x instalacion)
+    const materialCost = sqm * pricePerSqm
+    const installationCost = sqm * installationPerSqm
     const investment = materialCost + installationCost
 
     const monthlySavings = bill * savingsPercentage
     const roiMonths = Math.round(investment / monthlySavings)
     const annualSavings = monthlySavings * 12
-    const fiveYearSavings = annualSavings * 5
 
     const calculatedResults = {
       investment,
       monthlySavings,
       roiMonths,
       annualSavings,
-      fiveYearSavings,
-      pricePerSqm,
-      installationPerSqm,
-      totalSqm,
       savingsPercentage: savingsPercentage * 100,
     }
 
@@ -195,7 +193,6 @@ export function CalculadoraForm() {
                   <div className="text-5xl font-black mb-2 text-foreground">
                     ${results.investment.toLocaleString('es-MX')}
                   </div>
-                  <div className="text-sm text-muted-foreground">Material + Instalación</div>
                 </Card>
 
                 <Card className="p-6 bg-secondary/50">
@@ -232,39 +229,8 @@ export function CalculadoraForm() {
                   <div className="text-5xl font-black mb-2 text-primary">
                     ${results.annualSavings.toLocaleString('es-MX')}
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    En 5 años: ${results.fiveYearSavings.toLocaleString('es-MX')}
-                  </div>
                 </Card>
               </div>
-
-              <Accordion type="single" collapsible className="mb-8">
-                <AccordionItem value="details">
-                  <AccordionTrigger className="text-lg font-semibold">
-                    Ver detalles del cálculo
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-3 pt-4">
-                      <div className="flex justify-between">
-                        <span>M² requeridos (con merma 10%)</span>
-                        <span className="font-semibold">{results.totalSqm.toFixed(1)} m²</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Precio por m²</span>
-                        <span className="font-semibold">${results.pricePerSqm}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Instalación por m²</span>
-                        <span className="font-semibold">${results.installationPerSqm}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>% Ahorro estimado</span>
-                        <span className="font-semibold">{results.savingsPercentage}%</span>
-                      </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
 
               {/* HubSpot Form Section */}
               <div className="mt-8 pt-8 border-t border-border">
