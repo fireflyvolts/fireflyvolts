@@ -31,26 +31,23 @@ export function CalculadoraForm() {
     const sqm = parseFloat(squareMeters)
     const bill = parseFloat(monthlyBill)
 
-    // Precio por m2 segun rango de metros cuadrados
+    // Precio por m2 (material + instalación incluida) según rango de metros cuadrados
+    // 5-10 m²: $1,152/m² | 10-100 m²: $1,058/m² | 101-500 m²: $963/m²
     let pricePerSqm: number
     if (sqm <= 10) {
-      pricePerSqm = 952
+      pricePerSqm = 1152
     } else if (sqm <= 100) {
-      pricePerSqm = 858
+      pricePerSqm = 1058
     } else {
-      pricePerSqm = 763
+      pricePerSqm = 963
     }
 
-    const installationPerSqm = 200
-
-    // Porcentajes de ahorro actualizados
+    // Porcentajes de ahorro por tipo de negocio
     const savingsMap = { hotel: 0.32, restaurant: 0.33, office: 0.27, hogar: 0.25 }
     const savingsPercentage = savingsMap[businessType]
 
-    // Inversion total = (metros x precio) + (metros x instalacion)
-    const materialCost = sqm * pricePerSqm
-    const installationCost = sqm * installationPerSqm
-    const investment = materialCost + installationCost
+    // Inversión total = metros × precio por m² (ya incluye instalación)
+    const investment = sqm * pricePerSqm
 
     const monthlySavings = bill * savingsPercentage
     const roiMonths = Math.round(investment / monthlySavings)
