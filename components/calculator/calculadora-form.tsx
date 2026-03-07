@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,9 +14,6 @@ export function CalculadoraForm() {
   const [businessType, setBusinessType] = useState<BusinessType>(null)
   const [squareMeters, setSquareMeters] = useState('')
   const [monthlyBill, setMonthlyBill] = useState('')
-  const [nombre, setNombre] = useState('')
-  const [telefono, setTelefono] = useState('')
-  const [email, setEmail] = useState('')
   const [showResults, setShowResults] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [results, setResults] = useState({
@@ -26,28 +23,30 @@ export function CalculadoraForm() {
     annualSavings: 0,
     fiveYearSavings: 0,
     pricePerSqm: 0,
-    installationPerSqm: 100,
+    installationPerSqm: 200,
     totalSqm: 0,
     savingsPercentage: 0,
   })
 
   const calculateROI = async () => {
-    if (!businessType || !squareMeters || !monthlyBill || !nombre || !telefono || !email) return
+    if (!businessType || !squareMeters || !monthlyBill) return
 
     setIsSubmitting(true)
 
     const sqm = parseFloat(squareMeters)
     const bill = parseFloat(monthlyBill)
 
-    const priceMap = { hotel: 360, restaurant: 340, office: 370, hogar: 380 }
-    const pricePerSqm = priceMap[businessType]
+    // Precio fijo para todos los tipos de negocio
+    const pricePerSqm = 750 // $750 MXN por m² de material
+    const installationPerSqm = 200 // $200 MXN por m² de instalación
 
     const savingsMap = { hotel: 0.28, restaurant: 0.30, office: 0.25, hogar: 0.22 }
     const savingsPercentage = savingsMap[businessType]
 
+    // Aplicar 10% de merma sobre los metros cuadrados
     const totalSqm = sqm * 1.1
     const materialCost = totalSqm * pricePerSqm
-    const installationCost = totalSqm * 100
+    const installationCost = sqm * installationPerSqm // Instalación sin merma
     const investment = materialCost + installationCost
 
     const monthlySavings = bill * savingsPercentage
@@ -62,30 +61,9 @@ export function CalculadoraForm() {
       annualSavings,
       fiveYearSavings,
       pricePerSqm,
-      installationPerSqm: 100,
+      installationPerSqm,
       totalSqm,
       savingsPercentage: savingsPercentage * 100,
-    }
-
-    // Enviar a HubSpot
-    try {
-      await fetch('/api/hubspot', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nombre,
-          telefono,
-          email,
-          tipo_negocio: businessType,
-          metros_cuadrados: sqm,
-          factura_mensual: bill,
-          inversion_estimada: investment,
-          ahorro_mensual: monthlySavings,
-          roi_meses: roiMonths,
-        }),
-      })
-    } catch (error) {
-      console.error('[v0] Error sending to HubSpot:', error)
     }
 
     setResults(calculatedResults)
@@ -96,6 +74,19 @@ export function CalculadoraForm() {
       document.getElementById('results')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     }, 100)
   }
+
+  // Load HubSpot script when results are shown
+  useEffect(() => {
+    if (showResults) {
+      const existingScript = document.querySelector('script[src="https://js.hsforms.net/forms/embed/50720390.js"]')
+      if (!existingScript) {
+        const script = document.createElement('script')
+        script.src = 'https://js.hsforms.net/forms/embed/50720390.js'
+        script.defer = true
+        document.body.appendChild(script)
+      }
+    }
+  }, [showResults])
 
   return (
     <section id="calculator" className="py-24 bg-muted/30">
@@ -151,40 +142,6 @@ export function CalculadoraForm() {
             )}
           </div>
 
-          {/* Contact Fields */}
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div>
-              <Label className="text-base mb-2 block">Nombre completo *</Label>
-              <Input
-                type="text"
-                placeholder="Juan Pérez"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                className="h-12"
-              />
-            </div>
-            <div>
-              <Label className="text-base mb-2 block">Teléfono *</Label>
-              <Input
-                type="tel"
-                placeholder="999 123 4567"
-                value={telefono}
-                onChange={(e) => setTelefono(e.target.value)}
-                className="h-12"
-              />
-            </div>
-            <div>
-              <Label className="text-base mb-2 block">Email *</Label>
-              <Input
-                type="email"
-                placeholder="correo@ejemplo.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-12"
-              />
-            </div>
-          </div>
-
           {/* Meter y Factura */}
           <div className="grid md:grid-cols-2 gap-8 mb-10">
             <div>
@@ -220,10 +177,10 @@ export function CalculadoraForm() {
             size="lg"
             className="w-full text-xl py-8 h-auto bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
             onClick={calculateROI}
-            disabled={!businessType || !squareMeters || !monthlyBill || !nombre || !telefono || !email || isSubmitting}
+            disabled={!businessType || !squareMeters || !monthlyBill || isSubmitting}
           >
             <Rocket className="w-6 h-6 mr-2" />
-            {isSubmitting ? 'ENVIANDO...' : 'CALCULAR AHORRO'}
+            {isSubmitting ? 'CALCULANDO...' : 'CALCULAR AHORRO'}
           </Button>
 
           {/* Results */}
@@ -309,10 +266,23 @@ export function CalculadoraForm() {
                 </AccordionItem>
               </Accordion>
 
-              <Button size="lg" className="w-full text-lg py-7 h-auto">
-                SOLICITAR VISITA TÉCNICA GRATIS
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+              {/* HubSpot Form Section */}
+              <div className="mt-8 pt-8 border-t border-border">
+                <h3 className="text-2xl font-bold text-center mb-2">
+                  ¿Te interesa esta cotización?
+                </h3>
+                <p className="text-center text-muted-foreground mb-6">
+                  Déjanos tus datos y un asesor te contacta en menos de 24 horas
+                </p>
+                <div className="bg-secondary/30 rounded-lg p-6">
+                  <div 
+                    className="hs-form-frame" 
+                    data-region="na1" 
+                    data-form-id="07fbc8e6-4f9a-4eab-9fbc-dfdc9e9711d4" 
+                    data-portal-id="50720390"
+                  ></div>
+                </div>
+              </div>
             </div>
           )}
         </Card>
