@@ -11,7 +11,6 @@ type BusinessType = 'hotel' | 'restaurant' | 'office' | 'hogar' | null
 
 export function CalculadoraForm() {
   const [businessType, setBusinessType] = useState<BusinessType>(null)
-  const [businessName, setBusinessName] = useState('')
   const [squareMeters, setSquareMeters] = useState('')
   const [monthlyBill, setMonthlyBill] = useState('')
   const [showResults, setShowResults] = useState(false)
@@ -162,21 +161,6 @@ export function CalculadoraForm() {
             )}
           </div>
 
-          {/* Nombre del negocio */}
-          <div className="mb-10">
-            <Label className="text-lg mb-4 flex items-center gap-2">
-              <Building2 className="w-5 h-5" />
-              {businessType === 'hogar' ? 'Nombre (opcional)' : 'Nombre del negocio'}
-            </Label>
-            <Input
-              type="text"
-              placeholder={businessType === 'hogar' ? 'Tu nombre' : 'Ej: Hotel Casa Grande'}
-              value={businessName}
-              onChange={(e) => setBusinessName(e.target.value)}
-              className="text-xl h-14"
-            />
-          </div>
-
           {/* Meter y Factura */}
           <div className="grid md:grid-cols-2 gap-8 mb-10">
             <div>
@@ -282,7 +266,6 @@ export function CalculadoraForm() {
                 <div className="bg-primary/5 rounded-lg p-4 mb-6 text-sm">
                   <p className="font-medium mb-2">Datos de tu cotizacion:</p>
                   <ul className="space-y-1 text-muted-foreground">
-                    {businessName && <li>Negocio: {businessName}</li>}
                     <li>Metros cuadrados: {squareMeters} m²</li>
                     <li>Inversion calculada: ${results.investment.toLocaleString('es-MX')} MXN</li>
                   </ul>
