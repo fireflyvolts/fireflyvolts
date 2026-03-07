@@ -1,10 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import { Logo } from '@/components/logo'
+import { CalculadoraForm } from '@/components/calculator/calculadora-form'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Card } from '@/components/ui/card'
 import {
   Accordion,
@@ -16,74 +14,12 @@ import {
   Flame,
   DollarSign,
   Snowflake,
-  TrendingDown,
-  Clock,
   CheckCircle2,
   ArrowRight,
-  Ruler,
-  Lightbulb,
-  Rocket,
-  Hotel,
-  UtensilsCrossed,
   Building2,
-  Phone,
-  Mail,
-  MapPin,
-  Home,
 } from 'lucide-react'
 
-type BusinessType = 'hotel' | 'restaurant' | 'office' | 'hogar' | null
-
 export default function LandingPage() {
-  const [businessType, setBusinessType] = useState<BusinessType>(null)
-  const [squareMeters, setSquareMeters] = useState('')
-  const [monthlyBill, setMonthlyBill] = useState('')
-  const [showResults, setShowResults] = useState(false)
-  const [results, setResults] = useState({
-    investment: 0,
-    monthlySavings: 0,
-    roiMonths: 0,
-    annualSavings: 0,
-    fiveYearSavings: 0,
-    pricePerSqm: 0,
-    totalSqm: 0,
-    savingsPercentage: 0,
-  })
-
-  const calculateROI = () => {
-    if (!businessType || !squareMeters || !monthlyBill) return
-
-    const sqm = parseFloat(squareMeters)
-    const bill = parseFloat(monthlyBill)
-
-    const priceMap = { hotel: 360, restaurant: 340, office: 370, hogar: 380 }
-    const pricePerSqm = priceMap[businessType]
-
-    const savingsMap = { hotel: 0.28, restaurant: 0.30, office: 0.25, hogar: 0.22 }
-    const savingsPercentage = savingsMap[businessType]
-
-    const totalSqm = sqm * 1.1
-    const investment = totalSqm * (pricePerSqm + 100)
-    const monthlySavings = bill * savingsPercentage
-    const roiMonths = Math.round(investment / monthlySavings)
-    const annualSavings = monthlySavings * 12
-
-    setResults({
-      investment,
-      monthlySavings,
-      roiMonths,
-      annualSavings,
-      fiveYearSavings: annualSavings * 5,
-      pricePerSqm,
-      totalSqm,
-      savingsPercentage: savingsPercentage * 100,
-    })
-
-    setShowResults(true)
-    setTimeout(() => {
-      document.getElementById('results')?.scrollIntoView({ behavior: 'smooth' })
-    }, 100)
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -406,179 +342,7 @@ export default function LandingPage() {
       </section>
 
       {/* Calculator */}
-      <section id="calculator" className="py-24 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <Card className="max-w-4xl mx-auto p-8 md:p-12">
-            <h2 className="text-4xl font-bold text-center mb-12">Calculadora de Ahorro</h2>
-
-            <div className="mb-10">
-              <Label className="text-lg mb-4 block">Tipo de Negocio</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Button
-                  size="lg"
-                  variant={businessType === 'hotel' ? 'default' : 'outline'}
-                  className="h-20 text-lg"
-                  onClick={() => setBusinessType('hotel')}
-                >
-                  <Hotel className="w-6 h-6 mr-2" />
-                  Hotel
-                </Button>
-                <Button
-                  size="lg"
-                  variant={businessType === 'restaurant' ? 'default' : 'outline'}
-                  className="h-20 text-lg"
-                  onClick={() => setBusinessType('restaurant')}
-                >
-                  <UtensilsCrossed className="w-6 h-6 mr-2" />
-                  Restaurante
-                </Button>
-                <Button
-                  size="lg"
-                  variant={businessType === 'office' ? 'default' : 'outline'}
-                  className="h-20 text-lg"
-                  onClick={() => setBusinessType('office')}
-                >
-                  <Building2 className="w-6 h-6 mr-2" />
-                  Oficina
-                </Button>
-                <Button
-                  size="lg"
-                  variant={businessType === 'hogar' ? 'default' : 'outline'}
-                  className="h-20 text-lg"
-                  onClick={() => setBusinessType('hogar')}
-                >
-                  <Home className="w-6 h-6 mr-2" />
-                  Hogar
-                </Button>
-              </div>
-              {businessType === 'hogar' && (
-                <p className="mt-4 text-center text-muted-foreground">
-                  Para hogares: Protege a tu familia del calor. Reduce costos de aire acondicionado.
-                </p>
-              )}
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 mb-10">
-              <div>
-                <Label className="text-lg mb-4 flex items-center gap-2">
-                  <Ruler className="w-5 h-5" />
-                  {businessType === 'hogar' ? 'Metros cuadrados de ventanas en tu casa' : 'Metros cuadrados de vidrio'}
-                </Label>
-                <Input
-                  type="number"
-                  placeholder="150"
-                  value={squareMeters}
-                  onChange={(e) => setSquareMeters(e.target.value)}
-                  className="text-4xl text-center h-20"
-                />
-              </div>
-              <div>
-                <Label className="text-lg mb-4 flex items-center gap-2">
-                  <Lightbulb className="w-5 h-5" />
-                  {businessType === 'hogar' ? 'Tu factura de luz mensual (MXN)' : 'Factura de luz mensual (MXN)'}
-                </Label>
-                <Input
-                  type="number"
-                  placeholder="25000"
-                  value={monthlyBill}
-                  onChange={(e) => setMonthlyBill(e.target.value)}
-                  className="text-4xl text-center h-20"
-                />
-              </div>
-            </div>
-
-            <Button
-              size="lg"
-              className="w-full text-xl py-8 h-auto"
-              onClick={calculateROI}
-              disabled={!businessType || !squareMeters || !monthlyBill}
-            >
-              <Rocket className="w-6 h-6 mr-2" />
-              CALCULAR AHORRO
-            </Button>
-
-            {showResults && (
-              <div id="results" className="mt-12 pt-12 border-t">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <Card className="p-6 bg-secondary/50">
-                    <div className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
-                      <DollarSign className="w-4 h-4" />
-                      INVERSIÓN TOTAL
-                    </div>
-                    <div className="text-5xl font-black mb-2">
-                      ${results.investment.toLocaleString('es-MX')}
-                    </div>
-                    <div className="text-sm text-muted-foreground">Material + Instalación</div>
-                  </Card>
-
-                  <Card className="p-6 bg-secondary/50">
-                    <div className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
-                      <TrendingDown className="w-4 h-4" />
-                      AHORRO MENSUAL
-                    </div>
-                    <div className="text-5xl font-black mb-2 text-primary">
-                      ${results.monthlySavings.toLocaleString('es-MX')}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      {results.savingsPercentage}% reducción
-                    </div>
-                  </Card>
-
-                  <Card className="p-6 bg-secondary/50">
-                    <div className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      RETORNO DE INVERSIÓN
-                    </div>
-                    <div className="text-5xl font-black mb-2">{results.roiMonths} meses</div>
-                  </Card>
-
-                  <Card className="p-6 bg-secondary/50">
-                    <div className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
-                      <DollarSign className="w-4 h-4" />
-                      AHORRO ANUAL
-                    </div>
-                    <div className="text-5xl font-black mb-2 text-primary">
-                      ${results.annualSavings.toLocaleString('es-MX')}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      5 años: ${results.fiveYearSavings.toLocaleString('es-MX')}
-                    </div>
-                  </Card>
-                </div>
-
-                <Accordion type="single" collapsible className="mb-8">
-                  <AccordionItem value="details">
-                    <AccordionTrigger className="text-lg font-semibold">
-                      Ver detalles del cálculo
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="space-y-3 pt-4">
-                        <div className="flex justify-between">
-                          <span>M² requeridos (con merma 10%)</span>
-                          <span className="font-semibold">{results.totalSqm.toFixed(1)} m²</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Precio por m²</span>
-                          <span className="font-semibold">${results.pricePerSqm}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>% Ahorro estimado</span>
-                          <span className="font-semibold">{results.savingsPercentage}%</span>
-                        </div>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-
-                <Button size="lg" className="w-full text-lg py-7 h-auto">
-                  SOLICITAR VISITA TÉCNICA GRATIS
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </div>
-            )}
-          </Card>
-        </div>
-      </section>
+      <CalculadoraForm />
 
       {/* Solution */}
       <section className="py-24">
