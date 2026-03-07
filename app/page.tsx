@@ -497,7 +497,7 @@ export default function LandingPage() {
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-3 gap-8 mb-8">
               <div>
-                <div className="text-2xl font-bold mb-4">Firefly Volts</div>
+                <div className="text-2xl font-bold mb-4">Firefly Volts MX</div>
                 <p className="text-muted-foreground">Distribuidor autorizado Power-All</p>
               </div>
               <div>
