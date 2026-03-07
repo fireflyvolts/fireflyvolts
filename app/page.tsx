@@ -526,7 +526,7 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="pt-8 border-t text-center text-muted-foreground text-sm">
-              © 2025 Firefly Volts. Todos los derechos reservados.
+              © 2025 Firefly Volts - Distribuidor PowerGlass. Todos los derechos reservados.
             </div>
           </div>
         </div>
