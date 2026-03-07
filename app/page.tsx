@@ -19,6 +19,9 @@ import {
   CheckCircle2,
   ArrowRight,
   Building2,
+  Phone,
+  Mail,
+  MapPin,
 } from 'lucide-react'
 
 export default function LandingPage() {
