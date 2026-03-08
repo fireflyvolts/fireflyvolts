@@ -302,7 +302,7 @@ export default function LandingPage() {
               <Button 
                 size="lg" 
                 className="bg-white text-primary hover:bg-gray-100 text-lg px-12 py-7 h-auto shadow-xl"
-                onClick={() => document.getElementById('hubspot-form')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 COTIZAR SOLUCIÓN COMPLETA
               </Button>
@@ -418,7 +418,7 @@ export default function LandingPage() {
               <Button 
                 size="lg" 
                 className="text-lg px-12 py-7 h-auto"
-                onClick={() => document.getElementById('hubspot-form')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 SOLICITAR VISITA TÉCNICA GRATIS
               </Button>
