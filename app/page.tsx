@@ -15,7 +15,6 @@ import {
   DollarSign,
   Snowflake,
   CheckCircle2,
-  ArrowRight,
   Building2,
   Phone,
   Mail,
@@ -51,16 +50,13 @@ export default function LandingPage() {
             <p className="text-xl md:text-2xl text-muted-foreground mb-12">
               PowerGlass: Película térmica profesional instalada en 1 día
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               <Button
                 size="lg"
                 className="text-lg px-9 py-[18px] h-auto shadow-lg hover:shadow-xl transition-shadow"
                 onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 CALCULAR MI AHORRO
-              </Button>
-              <Button size="lg" variant="outline" className="text-lg px-9 py-[18px] h-auto bg-transparent hover:shadow-lg transition-shadow">
-                Ver instalaciones <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
           </div>
@@ -136,77 +132,44 @@ export default function LandingPage() {
               Comparación científica de rechazo térmico y protección UV
             </p>
 
-            {/* Desktop Table */}
-            <div className="hidden lg:block overflow-x-auto mb-12">
-              <table className="w-full border-collapse">
+            {/* Table - always visible with horizontal scroll on mobile */}
+            <div className="overflow-x-auto mb-12">
+              <table className="w-full border-collapse min-w-[500px]">
                 <thead>
                   <tr className="bg-muted">
-                    <th className="p-4 text-left font-semibold">Tipo de Vidrio</th>
-                    <th className="p-4 text-center font-semibold"><span className="text-2xl">🔥</span> Rechazo IR</th>
-                    <th className="p-4 text-center font-semibold"><span className="text-2xl">☀️</span> Rechazo UV</th>
-                    <th className="p-4 text-center font-semibold"><span className="text-2xl">💡</span> Luz Natural</th>
-                    <th className="p-4 text-center font-semibold">Inversión</th>
-                    <th className="p-4 text-center font-semibold">Instalación</th>
+                    <th className="p-4 text-left font-semibold whitespace-nowrap">Tipo de Vidrio</th>
+                    <th className="p-4 text-center font-semibold whitespace-nowrap"><span className="text-xl">🔥</span> Rechazo IR</th>
+                    <th className="p-4 text-center font-semibold whitespace-nowrap"><span className="text-xl">☀️</span> Rechazo UV</th>
+                    <th className="p-4 text-center font-semibold whitespace-nowrap"><span className="text-xl">💡</span> Luz Natural</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="border-b">
-                    <td className="p-4 font-medium">Cristal Natural</td>
+                    <td className="p-4 font-medium whitespace-nowrap">Cristal Natural</td>
                     <td className="p-4 text-center"><span className="font-bold">27.5%</span> <span className="text-red-500">❌</span></td>
                     <td className="p-4 text-center"><span className="font-bold">19.9%</span> <span className="text-red-500">❌</span></td>
                     <td className="p-4 text-center"><span className="font-bold">87.2%</span> <span className="text-green-500">✅</span></td>
-                    <td className="p-4 text-center">Base</td>
-                    <td className="p-4 text-center text-muted-foreground">N/A</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="p-4 font-medium">Cristal Temporizado</td>
+                    <td className="p-4 font-medium whitespace-nowrap">Cristal Temporizado</td>
                     <td className="p-4 text-center"><span className="font-bold">21.8%</span> <span className="text-red-500">❌</span></td>
                     <td className="p-4 text-center"><span className="font-bold">54.4%</span> <span className="text-yellow-500">⚠️</span></td>
                     <td className="p-4 text-center"><span className="font-bold">60.1%</span> <span className="text-yellow-500">⚠️</span></td>
-                    <td className="p-4 text-center">+40%</td>
-                    <td className="p-4 text-center text-muted-foreground">N/A</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="p-4 font-medium">Cristal Doble</td>
+                    <td className="p-4 font-medium whitespace-nowrap">Cristal Doble</td>
                     <td className="p-4 text-center"><span className="font-bold">84.4%</span> <span className="text-yellow-500">⚠️</span></td>
                     <td className="p-4 text-center"><span className="font-bold">79.2%</span> <span className="text-yellow-500">⚠️</span></td>
                     <td className="p-4 text-center"><span className="font-bold">64.6%</span> <span className="text-yellow-500">⚠️</span></td>
-                    <td className="p-4 text-center">+150%</td>
-                    <td className="p-4 text-center">Obra civil</td>
                   </tr>
                   <tr className="bg-gradient-to-r from-blue-50 to-blue-100 border-b-2 border-primary border-l-4">
-                    <td className="p-4 font-bold">PowerGlass</td>
+                    <td className="p-4 font-bold whitespace-nowrap">PowerGlass</td>
                     <td className="p-4 text-center"><span className="font-bold text-xl">92.6%</span> <span className="text-green-500 text-2xl">✅</span></td>
                     <td className="p-4 text-center"><span className="font-bold text-xl">97.7%</span> <span className="text-green-500 text-2xl">✅</span></td>
                     <td className="p-4 text-center"><span className="font-bold text-xl">71.7%</span> <span className="text-green-500 text-2xl">✅</span></td>
-                    <td className="p-4 text-center font-bold">+60%</td>
-                    <td className="p-4 text-center font-bold">1 día sin obra</td>
                   </tr>
                 </tbody>
               </table>
-            </div>
-
-            {/* Mobile Cards */}
-            <div className="lg:hidden space-y-4 mb-12">
-              {[
-                { name: 'Cristal Natural', ir: '27.5%', uv: '19.9%', light: '87.2%', inv: 'Base', inst: 'N/A', highlight: false },
-                { name: 'Cristal Temporizado', ir: '21.8%', uv: '54.4%', light: '60.1%', inv: '+40%', inst: 'N/A', highlight: false },
-                { name: 'Cristal Doble', ir: '84.4%', uv: '79.2%', light: '64.6%', inv: '+150%', inst: 'Obra civil', highlight: false },
-                { name: 'PowerGlass', ir: '92.6%', uv: '97.7%', light: '71.7%', inv: '+60%', inst: '1 día sin obra', highlight: true },
-              ].map((item, i) => (
-                <Card key={i} className={item.highlight ? 'border-primary bg-blue-50' : ''}>
-                  <div className="p-6 space-y-3">
-                    <h3 className={`text-xl font-bold mb-4 ${item.highlight ? 'text-primary' : ''}`}>{item.name}</h3>
-                    <div className="grid grid-cols-2 gap-3 text-sm">
-                      <div><span className="text-muted-foreground">Rechazo IR:</span> <span className="font-bold">{item.ir}</span></div>
-                      <div><span className="text-muted-foreground">Rechazo UV:</span> <span className="font-bold">{item.uv}</span></div>
-                      <div><span className="text-muted-foreground">Luz Natural:</span> <span className="font-bold">{item.light}</span></div>
-                      <div><span className="text-muted-foreground">Inversión:</span> <span className="font-bold">{item.inv}</span></div>
-                      <div className="col-span-2"><span className="text-muted-foreground">Instalación:</span> <span className="font-bold">{item.inst}</span></div>
-                    </div>
-                  </div>
-                </Card>
-              ))}
             </div>
 
             {/* Highlights */}
@@ -336,7 +299,11 @@ export default function LandingPage() {
             </p>
 
             <div className="text-center">
-              <Button size="lg" className="bg-white text-primary hover:bg-gray-100 text-lg px-12 py-7 h-auto shadow-xl">
+              <Button 
+                size="lg" 
+                className="bg-white text-primary hover:bg-gray-100 text-lg px-12 py-7 h-auto shadow-xl"
+                onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 COTIZAR SOLUCIÓN COMPLETA
               </Button>
             </div>
@@ -448,7 +415,11 @@ export default function LandingPage() {
             </div>
 
             <div className="text-center">
-              <Button size="lg" className="text-lg px-12 py-7 h-auto">
+              <Button 
+                size="lg" 
+                className="text-lg px-12 py-7 h-auto"
+                onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 SOLICITAR VISITA TÉCNICA GRATIS
               </Button>
             </div>

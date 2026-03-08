@@ -31,26 +31,23 @@ export function CalculadoraForm() {
     const sqm = parseFloat(squareMeters)
     const bill = parseFloat(monthlyBill)
 
-    // Precio por m2 segun rango de metros cuadrados
+    // Precio por m2 (material + instalación incluida) según rango de metros cuadrados
+    // 5-10 m²: $1,152/m² | 10-100 m²: $1,058/m² | 101-500 m²: $963/m²
     let pricePerSqm: number
     if (sqm <= 10) {
-      pricePerSqm = 952
+      pricePerSqm = 1152
     } else if (sqm <= 100) {
-      pricePerSqm = 858
+      pricePerSqm = 1058
     } else {
-      pricePerSqm = 763
+      pricePerSqm = 963
     }
 
-    const installationPerSqm = 200
-
-    // Porcentajes de ahorro actualizados
+    // Porcentajes de ahorro por tipo de negocio
     const savingsMap = { hotel: 0.32, restaurant: 0.33, office: 0.27, hogar: 0.25 }
     const savingsPercentage = savingsMap[businessType]
 
-    // Inversion total = (metros x precio) + (metros x instalacion)
-    const materialCost = sqm * pricePerSqm
-    const installationCost = sqm * installationPerSqm
-    const investment = materialCost + installationCost
+    // Inversión total = metros × precio por m² (ya incluye instalación)
+    const investment = sqm * pricePerSqm
 
     const monthlySavings = bill * savingsPercentage
     const roiMonths = Math.round(investment / monthlySavings)
@@ -73,18 +70,42 @@ export function CalculadoraForm() {
     }, 100)
   }
 
-  // Load HubSpot script when results are shown
+  // Load HubSpot form when results are shown
   useEffect(() => {
-    if (showResults) {
-      const existingScript = document.querySelector('script[src="https://js.hsforms.net/forms/embed/50720390.js"]')
+    if (showResults && typeof window !== 'undefined') {
+      // Load HubSpot script if not already loaded
+      const loadHubSpotForm = () => {
+        if ((window as typeof window & { hbspt?: { forms: { create: (config: Record<string, unknown>) => void } } }).hbspt) {
+          (window as typeof window & { hbspt: { forms: { create: (config: Record<string, unknown>) => void } } }).hbspt.forms.create({
+            region: 'na1',
+            portalId: '50720390',
+            formId: '07fbc8e6-4f9a-4eab-9fbc-dfdc9e9711d4',
+            target: '#hubspot-form-container',
+            onFormReady: function() {
+              // Set hidden field values from calculator results
+              const sqmInput = document.querySelector('input[name="metros_cuadrados"]') as HTMLInputElement
+              const inversionInput = document.querySelector('input[name="inversion_calculada"]') as HTMLInputElement
+              
+              if (sqmInput) sqmInput.value = squareMeters
+              if (inversionInput) inversionInput.value = results.investment.toString()
+            }
+          })
+        }
+      }
+
+      const existingScript = document.querySelector('script[src="//js.hsforms.net/forms/embed/v2.js"]')
       if (!existingScript) {
         const script = document.createElement('script')
-        script.src = 'https://js.hsforms.net/forms/embed/50720390.js'
-        script.defer = true
+        script.src = '//js.hsforms.net/forms/embed/v2.js'
+        script.charset = 'utf-8'
+        script.async = true
+        script.onload = loadHubSpotForm
         document.body.appendChild(script)
+      } else {
+        loadHubSpotForm()
       }
     }
-  }, [showResults])
+  }, [showResults, squareMeters, results.investment])
 
   return (
     <section id="calculator" className="py-24 bg-muted/30">
@@ -233,20 +254,25 @@ export function CalculadoraForm() {
               </div>
 
               {/* HubSpot Form Section */}
-              <div className="mt-8 pt-8 border-t border-border">
+              <div id="hubspot-form" className="mt-8 pt-8 border-t border-border">
                 <h3 className="text-2xl font-bold text-center mb-2">
                   ¿Te interesa esta cotización?
                 </h3>
                 <p className="text-center text-muted-foreground mb-6">
                   Déjanos tus datos y un asesor te contacta en menos de 24 horas
                 </p>
+                
+                {/* Hidden fields summary for user reference */}
+                <div className="bg-primary/5 rounded-lg p-4 mb-6 text-sm">
+                  <p className="font-medium mb-2">Datos de tu cotizacion:</p>
+                  <ul className="space-y-1 text-muted-foreground">
+                    <li>Metros cuadrados: {squareMeters} m²</li>
+                    <li>Inversion calculada: ${results.investment.toLocaleString('es-MX')} MXN</li>
+                  </ul>
+                </div>
+
                 <div className="bg-secondary/30 rounded-lg p-6">
-                  <div 
-                    className="hs-form-frame" 
-                    data-region="na1" 
-                    data-form-id="07fbc8e6-4f9a-4eab-9fbc-dfdc9e9711d4" 
-                    data-portal-id="50720390"
-                  ></div>
+                  <div id="hubspot-form-container"></div>
                 </div>
               </div>
             </div>
