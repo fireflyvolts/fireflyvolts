@@ -8,8 +8,8 @@ const geist = Geist({ subsets: ["latin"], variable: '--font-sans' });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: '--font-mono' });
 
 export const metadata: Metadata = {
-  title: 'PowerGlass - Reduce tu factura eléctrica hasta 35% | Firefly Volts',
-  description: 'Película térmica profesional para hoteles, restaurantes y oficinas. Instalación en 1 día, ROI en 18-24 meses. Distribuidor autorizado en Mérida, Yucatán.',
+  title: 'Firefly Volts | UPS y BESS para empresas en Yucatan',
+  description: 'Diagnostico sin costo para empresas en Yucatan que necesitan continuidad energetica, UPS, BESS o reducir picos de demanda CFE.',
   generator: 'v0.app',
   icons: {
     icon: [
