@@ -44,18 +44,6 @@ function compactProperties(properties: Record<string, string | undefined>) {
   ) as Record<string, string>
 }
 
-function getAnalyticsSource(properties: Record<string, string>) {
-  const source = (properties.utm_source || '').toLowerCase()
-  const medium = (properties.utm_medium || '').toLowerCase()
-  const hasGoogleClickId = Boolean(properties.gclid || properties.gbraid || properties.wbraid)
-
-  if (hasGoogleClickId || ['cpc', 'ppc', 'paid_search'].includes(medium)) return 'PAID_SEARCH'
-  if (['organic', 'seo', 'organic_search'].includes(medium)) return 'ORGANIC_SEARCH'
-  if (medium === 'referral') return 'REFERRALS'
-  if ((!source || source === 'direct') && !medium) return 'DIRECT_TRAFFIC'
-  return 'OTHER_CAMPAIGNS'
-}
-
 function buildContactProperties(
   submitted: Record<string, string>,
   ownerId: string
@@ -95,13 +83,7 @@ function buildContactProperties(
     hs_lead_status: 'NEW',
     lifecyclestage: 'lead',
     fuente_del_lead: 'Otro',
-    hs_analytics_source: getAnalyticsSource(submitted),
-    hs_analytics_source_data_1: [submitted.utm_campaign, campaignId, submitted.adgroup_id]
-      .filter(Boolean)
-      .join(' | '),
-    hs_analytics_source_data_2: [keyword, creativeId, submitted.match_type]
-      .filter(Boolean)
-      .join(' | '),
+    origen_lead: 'Web Firefly Volts',
     message: detailLines.join('\n').slice(0, 2000),
   })
 }
