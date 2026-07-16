@@ -36,6 +36,13 @@ const acceptedInputProperties = new Set([
 type HubSpotResult = {
   response: Response
   data: Record<string, unknown>
+  createdNewContact: boolean
+}
+
+type AutomationResult = {
+  dealId?: string
+  taskId?: string
+  warning?: string
 }
 
 function compactProperties(properties: Record<string, string | undefined>) {
@@ -124,7 +131,7 @@ async function findContactByEmail(token: string, email: string) {
 
 async function parseHubSpotResponse(response: Response): Promise<HubSpotResult> {
   const data = await response.json().catch(() => ({}))
-  return { response, data }
+  return { response, data, createdNewContact: response.status === 201 }
 }
 
 async function saveContact(token: string, properties: Record<string, string>): Promise<HubSpotResult> {
@@ -143,6 +150,105 @@ async function saveContact(token: string, properties: Record<string, string>): P
   delete updateProperties.lifecyclestage
 
   return parseHubSpotResponse(await updateContact(token, contactId, updateProperties))
+}
+
+function isQualifiedLead(monthlyBillRange?: string) {
+  return monthlyBillRange === '$500 mil a $750 mil' || monthlyBillRange === 'Más de $750 mil'
+}
+
+async function createAssociation(
+  token: string,
+  fromType: string,
+  fromId: string,
+  toType: string,
+  toId: string
+) {
+  const response = await fetch(
+    `${HUBSPOT_BASE_URL}/crm/v4/objects/${fromType}/${fromId}/associations/default/${toType}/${toId}`,
+    {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}))
+    throw new Error(String(data.message || `No se pudo asociar ${fromType} con ${toType}`))
+  }
+}
+
+async function automateQualifiedLead(
+  token: string,
+  ownerId: string,
+  contactId: string,
+  submitted: Record<string, string>
+): Promise<AutomationResult> {
+  const company = submitted.company || submitted.nombre_del_negocio || submitted.firstname || submitted.email
+  const dealResponse = await fetch(`${HUBSPOT_BASE_URL}/crm/v3/objects/deals`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      properties: {
+        dealname: `BESS – ${company}`,
+        pipeline: 'default',
+        dealstage: 'appointmentscheduled',
+        hubspot_owner_id: ownerId,
+      },
+    }),
+  })
+  const dealData = await dealResponse.json().catch(() => ({})) as Record<string, unknown>
+  const dealId = typeof dealData.id === 'string' ? dealData.id : ''
+
+  if (!dealResponse.ok || !dealId) {
+    throw new Error(String(dealData.message || 'No se pudo crear la oportunidad BESS'))
+  }
+
+  await createAssociation(token, 'deals', dealId, 'contacts', contactId)
+
+  const dueAt = new Date(Date.now() + 10 * 60 * 1000).toISOString()
+  const campaign = submitted.utm_campaign || 'sin campaña'
+  const source = `${submitted.utm_source || 'direct'} / ${submitted.utm_medium || 'sin medio'}`
+  const queueId = process.env.HUBSPOT_TASK_QUEUE_ID || '12835214'
+  const taskResponse = await fetch(`${HUBSPOT_BASE_URL}/crm/v3/objects/tasks`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      properties: compactProperties({
+        hs_timestamp: dueAt,
+        hs_task_subject: `Contactar lead BESS – ${company}`,
+        hs_task_body: [
+          `Recibo mensual: ${submitted.monthly_bill_range}`,
+          `Teléfono: ${submitted.phone || 'no indicado'}`,
+          `Fuente / medio: ${source}`,
+          `Campaña: ${campaign}`,
+          'Objetivo: contactar al lead y solicitar un recibo reciente de CFE.',
+        ].join('\n'),
+        hs_task_status: 'NOT_STARTED',
+        hs_task_priority: 'HIGH',
+        hubspot_owner_id: ownerId,
+        hs_queue_membership_ids: queueId,
+      }),
+    }),
+  })
+  const taskData = await taskResponse.json().catch(() => ({})) as Record<string, unknown>
+  const taskId = typeof taskData.id === 'string' ? taskData.id : ''
+
+  if (!taskResponse.ok || !taskId) {
+    throw new Error(String(taskData.message || 'La oportunidad se creó, pero no se pudo crear la tarea'))
+  }
+
+  await Promise.all([
+    createAssociation(token, 'tasks', taskId, 'contacts', contactId),
+    createAssociation(token, 'tasks', taskId, 'deals', dealId),
+  ])
+
+  return { dealId, taskId }
 }
 
 export async function POST(request: Request) {
@@ -173,7 +279,26 @@ export async function POST(request: Request) {
     const result = await saveContact(HUBSPOT_TOKEN, properties)
 
     if (result.response.ok) {
-      return NextResponse.json({ success: true, contact: result.data })
+      const contactId = typeof result.data.id === 'string' ? result.data.id : ''
+      let automation: AutomationResult = {}
+
+      if (result.createdNewContact && contactId && isQualifiedLead(submittedProperties.monthly_bill_range)) {
+        try {
+          automation = await automateQualifiedLead(
+            HUBSPOT_TOKEN,
+            HUBSPOT_OWNER_ID,
+            contactId,
+            submittedProperties
+          )
+        } catch (automationError) {
+          console.error('[fireflyvolts] HubSpot automation error:', automationError)
+          automation = {
+            warning: 'El lead se guardó, pero la automatización comercial requiere revisión.',
+          }
+        }
+      }
+
+      return NextResponse.json({ success: true, contact: result.data, automation })
     }
 
     const fallbackProperties = {
@@ -191,9 +316,31 @@ export async function POST(request: Request) {
       const fallbackResult = await saveContact(HUBSPOT_TOKEN, fallbackProperties)
 
       if (fallbackResult.response.ok) {
+        const contactId = typeof fallbackResult.data.id === 'string' ? fallbackResult.data.id : ''
+        let automation: AutomationResult = {}
+
+        if (
+          fallbackResult.createdNewContact &&
+          contactId &&
+          isQualifiedLead(submittedProperties.monthly_bill_range)
+        ) {
+          try {
+            automation = await automateQualifiedLead(
+              HUBSPOT_TOKEN,
+              HUBSPOT_OWNER_ID,
+              contactId,
+              submittedProperties
+            )
+          } catch (automationError) {
+            console.error('[fireflyvolts] HubSpot fallback automation error:', automationError)
+            automation.warning = 'El lead se guardó, pero la automatización comercial requiere revisión.'
+          }
+        }
+
         return NextResponse.json({
           success: true,
           contact: fallbackResult.data,
+          automation,
           warning: 'Lead created with standard HubSpot fields. Check custom property mapping.',
         })
       }
