@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card'
 import {
   ArrowRight,
   BatteryCharging,
+  BookOpen,
   Building2,
   CheckCircle2,
   Factory,
@@ -208,17 +209,41 @@ export default function LandingPage() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [error, setError] = useState('')
 
-  const utmProperties = useMemo(() => {
+  const attributionProperties = useMemo(() => {
     if (typeof window === 'undefined') return {}
+
     const params = new URLSearchParams(window.location.search)
-    return {
-      utm_source: params.get('utm_source') || 'direct',
+    const storageKey = 'firefly_attribution'
+    let stored: Record<string, string> = {}
+
+    try {
+      stored = JSON.parse(window.localStorage.getItem(storageKey) || '{}')
+    } catch {
+      stored = {}
+    }
+
+    const current = {
+      utm_source: params.get('utm_source') || '',
       utm_medium: params.get('utm_medium') || '',
       utm_campaign: params.get('utm_campaign') || '',
       utm_content: params.get('utm_content') || '',
       utm_term: params.get('utm_term') || '',
-      landing_page: window.location.pathname,
+      gclid: params.get('gclid') || '',
+      gbraid: params.get('gbraid') || '',
+      wbraid: params.get('wbraid') || '',
     }
+
+    const attribution = {
+      ...stored,
+      ...Object.fromEntries(Object.entries(current).filter(([, value]) => value)),
+      utm_source: current.utm_source || stored.utm_source || 'direct',
+      landing_page: stored.landing_page || window.location.pathname,
+      page_url: window.location.href,
+      referrer: stored.referrer || document.referrer || '',
+    }
+
+    window.localStorage.setItem(storageKey, JSON.stringify(attribution))
+    return attribution
   }, [])
 
   const updateField = (field: keyof FormState, value: string) => {
@@ -246,7 +271,7 @@ export default function LandingPage() {
             fuente_del_lead: 'Landing BESS - formulario superior',
             producto_de_interes: 'BESS / Peak shaving',
             lead_source: 'Landing',
-            ...utmProperties,
+            ...attributionProperties,
           },
         }),
       })
@@ -256,16 +281,11 @@ export default function LandingPage() {
         throw new Error(body.error || 'No pudimos enviar tus datos.')
       }
 
-      const analyticsWindow = window as Window & {
-        gtag?: (command: string, eventName: string, parameters?: Record<string, string>) => void
-      }
-      analyticsWindow.gtag?.('event', 'generate_lead', {
-        lead_source: 'landing_bess',
-        monthly_bill_range: form.monthlyBill,
-      })
-
-      setStatus('success')
-      setForm(initialFormState)
+      window.sessionStorage.setItem(
+        'firefly_lead_conversion',
+        JSON.stringify({ monthly_bill_range: form.monthlyBill })
+      )
+      window.location.assign('/gracias')
     } catch (submitError) {
       setStatus('error')
       setError(submitError instanceof Error ? submitError.message : 'No pudimos enviar tus datos.')
@@ -413,6 +433,26 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
+              <a
+                href="/que-es-peak-shaving"
+                className="group mt-9 flex flex-col gap-5 rounded-2xl border border-sky-200 bg-sky-50 p-6 transition hover:border-sky-300 hover:bg-sky-100/70 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="flex gap-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-sky-500 shadow-sm">
+                    <BookOpen className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="font-black text-slate-950">¿Quieres entender mejor el peak shaving?</p>
+                    <p className="mt-1 text-sm leading-6 text-slate-600">
+                      Conoce cómo funciona, qué diferencia hay entre kW y kWh y cuándo conviene analizar un BESS.
+                    </p>
+                  </div>
+                </div>
+                <span className="inline-flex shrink-0 items-center font-black text-sky-600 group-hover:text-sky-700">
+                  Aprende más
+                  <ArrowRight className="ml-2 h-4 w-4 transition group-hover:translate-x-1" />
+                </span>
+              </a>
             </div>
 
             <div className="rounded-[2rem] border border-slate-200 bg-slate-50 p-5 shadow-2xl shadow-slate-950/10 md:p-8">
