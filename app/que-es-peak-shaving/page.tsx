@@ -30,6 +30,21 @@ export const metadata: Metadata = {
     title: '¿Qué es peak shaving y cómo funciona con un sistema BESS?',
     description:
       'Guía para entender la reducción de picos de demanda, su impacto en el recibo y cuándo conviene analizar un sistema de almacenamiento.',
+    images: [
+      {
+        url: '/firefly-volts-og.png',
+        width: 1200,
+        height: 630,
+        alt: 'Firefly Volts',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '¿Qué es peak shaving y cómo funciona con un sistema BESS?',
+    description:
+      'Guía para entender la reducción de picos de demanda, su impacto en el recibo y cuándo conviene analizar un sistema de almacenamiento.',
+    images: ['/firefly-volts-og.png'],
   },
 }
 

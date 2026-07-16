@@ -2,22 +2,29 @@ import { NextResponse } from 'next/server'
 
 const HUBSPOT_BASE_URL = 'https://api.hubapi.com'
 
-const allowedProperties = new Set([
+const acceptedInputProperties = new Set([
   'firstname',
   'email',
   'phone',
   'nombre_del_negocio',
   'company',
-  'tipo_de_negocio',
-  'preocupacion_principal',
-  'fuente_del_lead',
-  'producto_de_interes',
-  'lead_source',
+  'monthly_bill_range',
+  'lead_origin',
+  'product_interest',
   'utm_source',
   'utm_medium',
   'utm_campaign',
+  'utm_id',
   'utm_content',
   'utm_term',
+  'campaign_id',
+  'adgroup_id',
+  'creative_id',
+  'keyword',
+  'match_type',
+  'device',
+  'network',
+  'location_id',
   'landing_page',
   'page_url',
   'referrer',
@@ -29,6 +36,74 @@ const allowedProperties = new Set([
 type HubSpotResult = {
   response: Response
   data: Record<string, unknown>
+}
+
+function compactProperties(properties: Record<string, string | undefined>) {
+  return Object.fromEntries(
+    Object.entries(properties).filter(([, value]) => typeof value === 'string' && value.length > 0)
+  ) as Record<string, string>
+}
+
+function getAnalyticsSource(properties: Record<string, string>) {
+  const source = (properties.utm_source || '').toLowerCase()
+  const medium = (properties.utm_medium || '').toLowerCase()
+  const hasGoogleClickId = Boolean(properties.gclid || properties.gbraid || properties.wbraid)
+
+  if (hasGoogleClickId || ['cpc', 'ppc', 'paid_search'].includes(medium)) return 'PAID_SEARCH'
+  if (['organic', 'seo', 'organic_search'].includes(medium)) return 'ORGANIC_SEARCH'
+  if (medium === 'referral') return 'REFERRALS'
+  if ((!source || source === 'direct') && !medium) return 'DIRECT_TRAFFIC'
+  return 'OTHER_CAMPAIGNS'
+}
+
+function buildContactProperties(
+  submitted: Record<string, string>,
+  ownerId: string
+): Record<string, string> {
+  const campaignId = submitted.utm_id || submitted.campaign_id
+  const keyword = submitted.utm_term || submitted.keyword
+  const creativeId = submitted.utm_content || submitted.creative_id
+  const detailLines = [
+    `Producto: ${submitted.product_interest || 'BESS / Peak shaving'}`,
+    `Recibo mensual: ${submitted.monthly_bill_range || 'No indicado'}`,
+    `Origen: ${submitted.lead_origin || 'Landing Firefly Volts'}`,
+    `Fuente / medio: ${submitted.utm_source || 'direct'} / ${submitted.utm_medium || 'sin medio'}`,
+    `Campaña: ${submitted.utm_campaign || 'sin campaña'}`,
+    campaignId ? `Campaign ID: ${campaignId}` : '',
+    submitted.adgroup_id ? `Ad group ID: ${submitted.adgroup_id}` : '',
+    keyword ? `Keyword: ${keyword}` : '',
+    creativeId ? `Creative ID: ${creativeId}` : '',
+    submitted.match_type ? `Match type: ${submitted.match_type}` : '',
+    submitted.device ? `Dispositivo: ${submitted.device}` : '',
+    submitted.network ? `Red: ${submitted.network}` : '',
+    submitted.location_id ? `Location ID: ${submitted.location_id}` : '',
+    submitted.gclid ? `GCLID: ${submitted.gclid}` : '',
+    submitted.gbraid ? `GBRAID: ${submitted.gbraid}` : '',
+    submitted.wbraid ? `WBRAID: ${submitted.wbraid}` : '',
+    submitted.landing_page ? `Landing inicial: ${submitted.landing_page}` : '',
+    submitted.page_url ? `URL de conversión: ${submitted.page_url}` : '',
+    submitted.referrer ? `Referente: ${submitted.referrer}` : '',
+  ].filter(Boolean)
+
+  return compactProperties({
+    firstname: submitted.firstname,
+    email: submitted.email,
+    phone: submitted.phone,
+    company: submitted.company || submitted.nombre_del_negocio,
+    nombre_del_negocio: submitted.nombre_del_negocio || submitted.company,
+    hubspot_owner_id: ownerId,
+    hs_lead_status: 'NEW',
+    lifecyclestage: 'lead',
+    fuente_del_lead: 'Otro',
+    hs_analytics_source: getAnalyticsSource(submitted),
+    hs_analytics_source_data_1: [submitted.utm_campaign, campaignId, submitted.adgroup_id]
+      .filter(Boolean)
+      .join(' | '),
+    hs_analytics_source_data_2: [keyword, creativeId, submitted.match_type]
+      .filter(Boolean)
+      .join(' | '),
+    message: detailLines.join('\n').slice(0, 2000),
+  })
 }
 
 async function createContact(token: string, properties: Record<string, string>) {
@@ -80,11 +155,17 @@ async function saveContact(token: string, properties: Record<string, string>): P
 
   if (!existing.response.ok || !contactId) return created
 
-  return parseHubSpotResponse(await updateContact(token, contactId, properties))
+  const updateProperties = { ...properties }
+  delete updateProperties.hubspot_owner_id
+  delete updateProperties.hs_lead_status
+  delete updateProperties.lifecyclestage
+
+  return parseHubSpotResponse(await updateContact(token, contactId, updateProperties))
 }
 
 export async function POST(request: Request) {
   const HUBSPOT_TOKEN = process.env.HUBSPOT_API_KEY
+  const HUBSPOT_OWNER_ID = process.env.HUBSPOT_OWNER_ID || '85294082'
 
   if (!HUBSPOT_TOKEN) {
     return NextResponse.json(
@@ -95,17 +176,18 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const submittedProperties = body.properties || {}
-    const properties = Object.fromEntries(
-      Object.entries(submittedProperties)
-        .filter(([key, value]) => allowedProperties.has(key) && typeof value === 'string')
+    const rawSubmittedProperties = body.properties || {}
+    const submittedProperties = Object.fromEntries(
+      Object.entries(rawSubmittedProperties)
+        .filter(([key, value]) => acceptedInputProperties.has(key) && typeof value === 'string')
         .map(([key, value]) => [key, String(value).slice(0, 2000)])
     )
 
-    if (!properties.email) {
+    if (!submittedProperties.email) {
       return NextResponse.json({ error: 'El correo es obligatorio' }, { status: 400 })
     }
 
+    const properties = buildContactProperties(submittedProperties, HUBSPOT_OWNER_ID)
     const result = await saveContact(HUBSPOT_TOKEN, properties)
 
     if (result.response.ok) {
@@ -117,7 +199,10 @@ export async function POST(request: Request) {
       email: properties.email,
       phone: properties.phone,
       company: properties.company || properties.nombre_del_negocio,
+      hubspot_owner_id: properties.hubspot_owner_id,
+      hs_lead_status: 'NEW',
       lifecyclestage: 'lead',
+      message: properties.message,
     }
 
     if (result.response.status === 400) {
