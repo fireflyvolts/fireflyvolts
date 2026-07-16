@@ -42,6 +42,7 @@ export async function POST(request: Request) {
 
     const fallbackProperties = {
       firstname: properties.firstname,
+      email: properties.email,
       phone: properties.phone,
       company: properties.company || properties.nombre_del_negocio,
       lifecyclestage: 'lead',

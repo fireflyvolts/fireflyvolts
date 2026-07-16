@@ -8,24 +8,16 @@ const geist = Geist({ subsets: ["latin"], variable: '--font-sans' });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: '--font-mono' });
 
 export const metadata: Metadata = {
-  title: 'Firefly Volts | UPS y BESS para empresas en Yucatan',
-  description: 'Diagnostico sin costo para empresas en Yucatan que necesitan continuidad energetica, UPS, BESS o reducir picos de demanda CFE.',
+  title: 'Firefly Volts | Peak shaving y BESS para empresas',
+  description: 'Reduce picos de demanda CFE con un sistema BESS dimensionado para tu operación. Diagnóstico energético sin costo en Mérida y Yucatán.',
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.jpg',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.jpg',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
+    icon: {
+      url: '/LOGO_FV-17.png',
+      type: 'image/png',
+      sizes: '32x32',
+    },
+    shortcut: '/LOGO_FV-17.png',
     apple: '/apple-icon.jpg',
   },
 }
