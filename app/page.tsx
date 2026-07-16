@@ -256,6 +256,14 @@ export default function LandingPage() {
         throw new Error(body.error || 'No pudimos enviar tus datos.')
       }
 
+      const analyticsWindow = window as Window & {
+        gtag?: (command: string, eventName: string, parameters?: Record<string, string>) => void
+      }
+      analyticsWindow.gtag?.('event', 'generate_lead', {
+        lead_source: 'landing_bess',
+        monthly_bill_range: form.monthlyBill,
+      })
+
       setStatus('success')
       setForm(initialFormState)
     } catch (submitError) {
@@ -280,6 +288,9 @@ export default function LandingPage() {
           <nav className="hidden items-center gap-1 text-sm font-semibold text-slate-600 lg:flex">
             <a href="#peak-shaving" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">
               Peak shaving
+            </a>
+            <a href="/que-es-peak-shaving" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">
+              Guía
             </a>
             <a href="#modelo" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">
               Modelo
@@ -609,6 +620,9 @@ export default function LandingPage() {
             <p className="mt-4 text-slate-600">
               Diagnóstico, dimensionamiento y estructura comercial para BESS y UPS. Primero tus números.
             </p>
+            <a href="/que-es-peak-shaving" className="mt-3 inline-block font-bold text-sky-600 hover:text-sky-700">
+              ¿Qué es peak shaving?
+            </a>
           </div>
         </div>
       </footer>
