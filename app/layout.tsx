@@ -39,12 +39,19 @@ export const metadata: Metadata = {
   },
   generator: 'v0.app',
   icons: {
-    icon: {
-      url: '/LOGO_FV-17.png',
-      type: 'image/png',
-      sizes: '32x32',
-    },
-    shortcut: '/LOGO_FV-17.png',
+    icon: [
+      {
+        url: '/favicon-firefly-96.png',
+        type: 'image/png',
+        sizes: '96x96',
+      },
+      {
+        url: '/LOGO_FV-17.png',
+        type: 'image/png',
+        sizes: '32x32',
+      },
+    ],
+    shortcut: '/favicon-firefly-96.png',
     apple: '/apple-icon.jpg',
   },
 }
