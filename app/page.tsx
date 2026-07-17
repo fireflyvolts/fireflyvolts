@@ -264,6 +264,11 @@ export default function LandingPage() {
     setStatus('submitting')
     setError('')
 
+    const metaEventId =
+      typeof window.crypto?.randomUUID === 'function'
+        ? window.crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`
+
     try {
       const response = await fetch('/api/hubspot', {
         method: 'POST',
@@ -278,6 +283,7 @@ export default function LandingPage() {
             monthly_bill_range: form.monthlyBill,
             lead_origin: 'Landing BESS - formulario superior',
             product_interest: 'BESS / Peak shaving',
+            meta_event_id: metaEventId,
             ...attributionProperties,
           },
         }),
@@ -290,7 +296,10 @@ export default function LandingPage() {
 
       window.sessionStorage.setItem(
         'firefly_lead_conversion',
-        JSON.stringify({ monthly_bill_range: form.monthlyBill })
+        JSON.stringify({
+          monthly_bill_range: form.monthlyBill,
+          meta_event_id: metaEventId,
+        })
       )
       window.location.assign('/gracias')
     } catch (submitError) {

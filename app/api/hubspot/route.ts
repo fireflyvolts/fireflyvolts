@@ -31,6 +31,7 @@ const acceptedInputProperties = new Set([
   'gclid',
   'gbraid',
   'wbraid',
+  'meta_event_id',
 ])
 
 type HubSpotResult = {
