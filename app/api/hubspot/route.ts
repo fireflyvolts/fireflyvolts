@@ -153,10 +153,6 @@ async function saveContact(token: string, properties: Record<string, string>): P
   return parseHubSpotResponse(await updateContact(token, contactId, updateProperties))
 }
 
-function isQualifiedLead(monthlyBillRange?: string) {
-  return monthlyBillRange === '$500 mil a $750 mil' || monthlyBillRange === 'Más de $750 mil'
-}
-
 async function createAssociation(
   token: string,
   fromType: string,
@@ -178,7 +174,7 @@ async function createAssociation(
   }
 }
 
-async function automateQualifiedLead(
+async function automateNewLead(
   token: string,
   ownerId: string,
   contactId: string,
@@ -209,7 +205,7 @@ async function automateQualifiedLead(
 
   await createAssociation(token, 'deals', dealId, 'contacts', contactId)
 
-  const dueAt = new Date(Date.now() + 10 * 60 * 1000).toISOString()
+  const dueAt = new Date(Date.now() + 5 * 60 * 1000)
   const campaign = submitted.utm_campaign || 'sin campaña'
   const source = `${submitted.utm_source || 'direct'} / ${submitted.utm_medium || 'sin medio'}`
   const queueId = process.env.HUBSPOT_TASK_QUEUE_ID || '12835214'
@@ -221,7 +217,8 @@ async function automateQualifiedLead(
     },
     body: JSON.stringify({
       properties: compactProperties({
-        hs_timestamp: dueAt,
+        hs_timestamp: dueAt.toISOString(),
+        hs_task_reminders: String(dueAt.getTime()),
         hs_task_subject: `Contactar lead BESS – ${company}`,
         hs_task_body: [
           `Recibo mensual: ${submitted.monthly_bill_range}`,
@@ -232,6 +229,7 @@ async function automateQualifiedLead(
         ].join('\n'),
         hs_task_status: 'NOT_STARTED',
         hs_task_priority: 'HIGH',
+        hs_task_type: 'EMAIL',
         hubspot_owner_id: ownerId,
         hs_queue_membership_ids: queueId,
       }),
@@ -283,9 +281,9 @@ export async function POST(request: Request) {
       const contactId = typeof result.data.id === 'string' ? result.data.id : ''
       let automation: AutomationResult = {}
 
-      if (result.createdNewContact && contactId && isQualifiedLead(submittedProperties.monthly_bill_range)) {
+      if (result.createdNewContact && contactId) {
         try {
-          automation = await automateQualifiedLead(
+          automation = await automateNewLead(
             HUBSPOT_TOKEN,
             HUBSPOT_OWNER_ID,
             contactId,
@@ -322,11 +320,10 @@ export async function POST(request: Request) {
 
         if (
           fallbackResult.createdNewContact &&
-          contactId &&
-          isQualifiedLead(submittedProperties.monthly_bill_range)
+          contactId
         ) {
           try {
-            automation = await automateQualifiedLead(
+            automation = await automateNewLead(
               HUBSPOT_TOKEN,
               HUBSPOT_OWNER_ID,
               contactId,
