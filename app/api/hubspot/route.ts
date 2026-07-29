@@ -52,6 +52,32 @@ function compactProperties(properties: Record<string, string | undefined>) {
   ) as Record<string, string>
 }
 
+function buildWhatsAppLink(name?: string, phone?: string) {
+  const digits = phone?.replace(/\D/g, '') || ''
+  let internationalNumber = ''
+
+  if (digits.length === 10) {
+    internationalNumber = `52${digits}`
+  } else if (digits.length === 12 && digits.startsWith('52')) {
+    internationalNumber = digits
+  } else if (digits.length === 13 && digits.startsWith('521')) {
+    internationalNumber = `52${digits.slice(3)}`
+  }
+
+  if (!internationalNumber) return ''
+
+  const firstName = name?.trim().split(/\s+/)[0]
+  const greeting = firstName ? `Hola ${firstName},` : 'Hola,'
+  const message = [
+    greeting,
+    'soy Rodrigo de Firefly Volts.',
+    'Recibimos tu solicitud sobre una solución BESS para reducir picos de demanda.',
+    '¿Podrías compartirnos un recibo reciente de CFE para hacer una revisión inicial?',
+  ].join(' ')
+
+  return `https://wa.me/${internationalNumber}?text=${encodeURIComponent(message)}`
+}
+
 function buildContactProperties(
   submitted: Record<string, string>,
   ownerId: string
@@ -208,6 +234,7 @@ async function automateNewLead(
   const dueAt = new Date(Date.now() + 5 * 60 * 1000)
   const campaign = submitted.utm_campaign || 'sin campaña'
   const source = `${submitted.utm_source || 'direct'} / ${submitted.utm_medium || 'sin medio'}`
+  const whatsappLink = buildWhatsAppLink(submitted.firstname, submitted.phone)
   const queueId = process.env.HUBSPOT_TASK_QUEUE_ID || '12835214'
   const taskResponse = await fetch(`${HUBSPOT_BASE_URL}/crm/v3/objects/tasks`, {
     method: 'POST',
@@ -223,6 +250,9 @@ async function automateNewLead(
         hs_task_body: [
           `Recibo mensual: ${submitted.monthly_bill_range}`,
           `Teléfono: ${submitted.phone || 'no indicado'}`,
+          whatsappLink
+            ? `WhatsApp directo: ${whatsappLink}`
+            : 'WhatsApp directo: número inválido o incompleto; validar antes de contactar.',
           `Fuente / medio: ${source}`,
           `Campaña: ${campaign}`,
           'Objetivo: contactar al lead y solicitar un recibo reciente de CFE.',
