@@ -11,6 +11,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${baseUrl}/bess`,
+      lastModified: new Date('2026-11-17'),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/que-es-peak-shaving`,
       lastModified: new Date('2026-07-16'),
       changeFrequency: 'monthly',
