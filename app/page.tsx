@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import {
   ArrowRight,
   BatteryCharging,
@@ -19,11 +18,12 @@ import {
   Store,
   Wrench,
 } from 'lucide-react'
-import { Logo } from '@/components/logo'
 import { NeedFinder } from '@/components/home/need-finder'
 import { OutageCalculator } from '@/components/home/outage-calculator'
 import { ProductCta } from '@/components/home/product-cta'
 import { QuoteForm } from '@/components/home/quote-form'
+import { SiteFooter } from '@/components/site/site-footer'
+import { SiteHeader } from '@/components/site/site-header'
 import { products } from '@/lib/products'
 
 export const metadata: Metadata = {
@@ -54,26 +54,7 @@ const [featured, ...rest] = products
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white text-slate-950">
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-xl">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 md:px-8">
-          <Link href="/" aria-label="Firefly Volts inicio">
-            <Logo />
-          </Link>
-          <nav className="hidden items-center gap-1 text-sm font-semibold text-slate-600 lg:flex">
-            <a href="#soluciones" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">Soluciones</a>
-            <a href="#calculadora" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">Calculadora</a>
-            <a href="#como-trabajamos" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">Cómo trabajamos</a>
-            <Link href="/que-es-peak-shaving" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">Guía</Link>
-          </nav>
-          <a
-            href="#cotizar"
-            className="inline-flex h-10 items-center rounded-md bg-sky-500 px-4 text-sm font-bold text-white transition hover:bg-sky-400"
-          >
-            Cotizar
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </a>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main>
         {/* Hero */}
@@ -283,17 +264,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="bg-white py-12">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-5 text-sm text-slate-500 md:flex-row md:items-center md:justify-between md:px-8">
-          <Logo />
-          <nav className="flex flex-wrap gap-x-6 gap-y-2 font-semibold">
-            <Link href="/bess" className="hover:text-sky-600">BESS · Peak shaving</Link>
-            <Link href="/que-es-peak-shaving" className="hover:text-sky-600">Guía de peak shaving</Link>
-            <a href="#cotizar" className="hover:text-sky-600">Cotizar</a>
-          </nav>
-          <p>© {new Date().getFullYear()} Firefly Volts · Mérida, Yucatán</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }

@@ -84,7 +84,7 @@ export function NeedFinder() {
             href={product.href}
             className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-xl bg-sky-500 font-black text-white transition hover:bg-sky-400"
           >
-            Calcular mi ahorro
+            Usar la calculadora
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         ) : (

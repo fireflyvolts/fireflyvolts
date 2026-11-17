@@ -52,7 +52,16 @@ function compactProperties(properties: Record<string, string | undefined>) {
   ) as Record<string, string>
 }
 
-function buildWhatsAppLink(name?: string, phone?: string) {
+/** Short product name for deal and task titles: "UPS · No-break | Calculadora: ..." becomes "UPS · No-break". */
+function productLabel(submitted: Record<string, string>) {
+  return submitted.product_interest?.split(' | ')[0]?.trim() || 'BESS / Peak shaving'
+}
+
+function isBessLead(submitted: Record<string, string>) {
+  return productLabel(submitted).startsWith('BESS')
+}
+
+function buildWhatsAppLink(name: string | undefined, phone: string | undefined, product: string, bess: boolean) {
   const digits = phone?.replace(/\D/g, '') || ''
   let internationalNumber = ''
 
@@ -71,8 +80,15 @@ function buildWhatsAppLink(name?: string, phone?: string) {
   const message = [
     greeting,
     'soy Rodrigo de Firefly Volts.',
-    'Recibimos tu solicitud sobre una solución BESS para reducir picos de demanda.',
-    '¿Podrías compartirnos un recibo reciente de CFE para hacer una revisión inicial?',
+    ...(bess
+      ? [
+          'Recibimos tu solicitud sobre una solución BESS para reducir picos de demanda.',
+          '¿Podrías compartirnos un recibo reciente de CFE para hacer una revisión inicial?',
+        ]
+      : [
+          `Recibimos tu solicitud sobre ${product}.`,
+          '¿Nos compartes un poco más de lo que necesitas proteger o mejorar para preparar tu propuesta?',
+        ]),
   ].join(' ')
 
   return `https://wa.me/${internationalNumber}?text=${encodeURIComponent(message)}`
@@ -207,6 +223,9 @@ async function automateNewLead(
   submitted: Record<string, string>
 ): Promise<AutomationResult> {
   const company = submitted.company || submitted.nombre_del_negocio || submitted.firstname || submitted.email
+  const product = productLabel(submitted)
+  const bess = isBessLead(submitted)
+  const dealPrefix = bess ? 'BESS' : product
   const dealResponse = await fetch(`${HUBSPOT_BASE_URL}/crm/v3/objects/deals`, {
     method: 'POST',
     headers: {
@@ -215,7 +234,7 @@ async function automateNewLead(
     },
     body: JSON.stringify({
       properties: {
-        dealname: `BESS – ${company}`,
+        dealname: `${dealPrefix} – ${company}`,
         pipeline: 'default',
         dealstage: 'appointmentscheduled',
         hubspot_owner_id: ownerId,
@@ -226,7 +245,7 @@ async function automateNewLead(
   const dealId = typeof dealData.id === 'string' ? dealData.id : ''
 
   if (!dealResponse.ok || !dealId) {
-    throw new Error(String(dealData.message || 'No se pudo crear la oportunidad BESS'))
+    throw new Error(String(dealData.message || `No se pudo crear la oportunidad ${dealPrefix}`))
   }
 
   await createAssociation(token, 'deals', dealId, 'contacts', contactId)
@@ -234,7 +253,7 @@ async function automateNewLead(
   const dueAt = new Date(Date.now() + 5 * 60 * 1000)
   const campaign = submitted.utm_campaign || 'sin campaña'
   const source = `${submitted.utm_source || 'direct'} / ${submitted.utm_medium || 'sin medio'}`
-  const whatsappLink = buildWhatsAppLink(submitted.firstname, submitted.phone)
+  const whatsappLink = buildWhatsAppLink(submitted.firstname, submitted.phone, product, bess)
   const queueId = process.env.HUBSPOT_TASK_QUEUE_ID || '12835214'
   const taskResponse = await fetch(`${HUBSPOT_BASE_URL}/crm/v3/objects/tasks`, {
     method: 'POST',
@@ -246,17 +265,22 @@ async function automateNewLead(
       properties: compactProperties({
         hs_timestamp: dueAt.toISOString(),
         hs_task_reminders: String(dueAt.getTime()),
-        hs_task_subject: `Contactar lead BESS – ${company}`,
+        hs_task_subject: `Contactar lead ${dealPrefix} – ${company}`,
         hs_task_body: [
-          `Recibo mensual: ${submitted.monthly_bill_range}`,
+          `Producto: ${submitted.product_interest || product}`,
+          bess ? `Recibo mensual: ${submitted.monthly_bill_range || 'no indicado'}` : '',
           `Teléfono: ${submitted.phone || 'no indicado'}`,
           whatsappLink
             ? `WhatsApp directo: ${whatsappLink}`
             : 'WhatsApp directo: número inválido o incompleto; validar antes de contactar.',
           `Fuente / medio: ${source}`,
           `Campaña: ${campaign}`,
-          'Objetivo: contactar al lead y solicitar un recibo reciente de CFE.',
-        ].join('\n'),
+          bess
+            ? 'Objetivo: contactar al lead y solicitar un recibo reciente de CFE.'
+            : 'Objetivo: contactar al lead, confirmar su necesidad y agendar visita técnica.',
+        ]
+          .filter(Boolean)
+          .join('\n'),
         hs_task_status: 'NOT_STARTED',
         hs_task_priority: 'HIGH',
         hs_task_type: 'EMAIL',

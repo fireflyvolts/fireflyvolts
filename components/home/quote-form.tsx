@@ -4,29 +4,39 @@ import { FormEvent, useEffect, useState } from 'react'
 import { ArrowRight, Loader2 } from 'lucide-react'
 import { readAttribution } from '@/lib/attribution'
 import { products, productById, type ProductId } from '@/lib/products'
-import { SELECT_PRODUCT_EVENT } from './select-product'
+import { SELECT_PRODUCT_EVENT, type SelectProductDetail } from './select-product'
 
 const fieldClass =
   'h-12 rounded-xl border border-white/15 bg-white/8 px-4 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-400 focus:ring-4 focus:ring-sky-400/10'
 
 const initialForm = { name: '', whatsapp: '', email: '', businessName: '', product: '' as ProductId | '' }
 
-export function QuoteForm() {
-  const [form, setForm] = useState(initialForm)
+type QuoteFormProps = {
+  /** Product preselected on a product landing. */
+  defaultProduct?: ProductId
+  /** Where the lead came from, as sales sees it in HubSpot. */
+  origin?: string
+  submitLabel?: string
+}
+
+export function QuoteForm({ defaultProduct, origin = 'Home - formulario de cotización', submitLabel = 'Quiero mi propuesta' }: QuoteFormProps) {
+  const [form, setForm] = useState<typeof initialForm>({ ...initialForm, product: defaultProduct ?? '' })
+  const [summary, setSummary] = useState('')
   const [status, setStatus] = useState<'idle' | 'submitting' | 'error'>('idle')
   const [error, setError] = useState('')
 
   useEffect(() => {
     const onSelect = (event: Event) => {
-      const id = (event as CustomEvent<ProductId>).detail
+      const { id, summary: calculated } = (event as CustomEvent<SelectProductDetail>).detail
       setForm((current) => ({ ...current, product: id }))
+      setSummary(calculated ?? '')
     }
     window.addEventListener(SELECT_PRODUCT_EVENT, onSelect)
     return () => window.removeEventListener(SELECT_PRODUCT_EVENT, onSelect)
   }, [])
 
   const update = (field: keyof typeof initialForm, value: string) =>
-    setForm((current) => ({ ...current, [field]: value }))
+    setForm((current) => ({ ...current, [field]: value }) as typeof initialForm)
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -50,8 +60,8 @@ export function QuoteForm() {
             phone: form.whatsapp,
             nombre_del_negocio: form.businessName,
             company: form.businessName,
-            lead_origin: 'Home - formulario de cotización',
-            product_interest: productName,
+            lead_origin: origin,
+            product_interest: summary ? `${productName} | Calculadora: ${summary}` : productName,
             meta_event_id: metaEventId,
             ...readAttribution(),
           },
@@ -108,6 +118,12 @@ export function QuoteForm() {
         <input required value={form.businessName} onChange={(e) => update('businessName', e.target.value)} className={fieldClass} placeholder="Nombre del negocio" autoComplete="organization" />
       </label>
 
+      {summary && (
+        <div className="rounded-xl border border-lime-300/30 bg-lime-300/10 px-4 py-3 text-sm text-lime-100">
+          <span className="font-bold">Tu cálculo:</span> {summary}
+        </div>
+      )}
+
       {status === 'error' && (
         <div className="rounded-xl border border-red-300/30 bg-red-400/10 px-4 py-3 text-sm font-semibold text-red-100">{error}</div>
       )}
@@ -123,7 +139,7 @@ export function QuoteForm() {
           </>
         ) : (
           <>
-            Quiero mi propuesta <ArrowRight className="ml-2 h-5 w-5" />
+            {submitLabel} <ArrowRight className="ml-2 h-5 w-5" />
           </>
         )}
       </button>

@@ -1,7 +1,8 @@
 'use client'
 
 import { FormEvent, useMemo, useState } from 'react'
-import { Logo } from '@/components/logo'
+import { SiteFooter } from '@/components/site/site-footer'
+import { SiteHeader } from '@/components/site/site-header'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -16,8 +17,6 @@ import {
   Hotel,
   LineChart,
   Loader2,
-  Mail,
-  MapPin,
   ReceiptText,
   ShieldCheck,
   Store,
@@ -316,31 +315,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white text-slate-950">
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-slate-950 backdrop-blur-xl">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 md:px-8">
-          <div>
-            <Logo />
-          </div>
-          <nav className="hidden items-center gap-1 text-sm font-semibold text-slate-600 lg:flex">
-            <a href="#peak-shaving" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">
-              Peak shaving
-            </a>
-            <a href="/que-es-peak-shaving" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">
-              Guía
-            </a>
-            <a href="#modelo" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">
-              Modelo
-            </a>
-            <a href="#caso" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">
-              Caso ejemplo
-            </a>
-          </nav>
-          <Button className="hidden bg-sky-500 hover:bg-sky-400 lg:inline-flex" onClick={scrollToForm}>
-            Analizar mi recibo
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main>
         <section className="relative overflow-hidden bg-white text-slate-950">
@@ -618,7 +593,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="contacto" className="relative overflow-hidden bg-[#061224] py-20 text-white md:py-28">
+        <section id="cotizar" className="relative overflow-hidden bg-[#061224] py-20 text-white md:py-28">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(132,204,22,.12),transparent_28%),linear-gradient(to_right,rgba(255,255,255,.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,.04)_1px,transparent_1px)] bg-[size:auto,48px_48px,48px_48px]" />
           <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 md:grid-cols-[.95fr_1.05fr] md:px-8">
             <div>
@@ -648,40 +623,9 @@ export default function LandingPage() {
         </Button>
       </div>
 
-      <footer className="bg-white py-12 pb-24 md:pb-12">
-        <div className="mx-auto grid max-w-7xl gap-8 px-5 md:grid-cols-3 md:px-8">
-          <div>
-            <Logo />
-            <p className="mt-4 max-w-sm text-slate-600">
-              Firefly Volts. Peak shaving, respaldo y eficiencia energética para empresas en Yucatán.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-black text-slate-950">Contacto</h3>
-            <div className="mt-4 space-y-3 text-slate-600">
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-sky-500" />
-                <a href="mailto:ventas@fireflyvolts.com" className="hover:text-sky-600">
-                  ventas@fireflyvolts.com
-                </a>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-sky-500" />
-                <span>Mérida, Yucatán</span>
-              </div>
-            </div>
-          </div>
-          <div>
-            <h3 className="font-black text-slate-950">Método</h3>
-            <p className="mt-4 text-slate-600">
-              Diagnóstico, dimensionamiento y estructura comercial para BESS y UPS. Primero tus números.
-            </p>
-            <a href="/que-es-peak-shaving" className="mt-3 inline-block font-bold text-sky-600 hover:text-sky-700">
-              ¿Qué es peak shaving?
-            </a>
-          </div>
-        </div>
-      </footer>
+      <div className="pb-20 lg:pb-0">
+        <SiteFooter />
+      </div>
     </div>
   )
 }
