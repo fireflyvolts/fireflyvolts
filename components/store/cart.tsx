@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import { MessageCircle, Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
-import { formatPrice, itemBySlug, type StoreItem } from '@/lib/catalog'
+import { formatPrice, hasPrice, itemBySlug, type StoreItem } from '@/lib/catalog'
 
 const STORAGE_KEY = 'firefly_cart'
 const PHONE = '525585301886'
@@ -66,7 +66,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo<CartContext>(() => {
-    const lines = raw.map((line) => ({ ...line, item: itemBySlug[line.slug] })).filter((line) => line.item)
+    const lines = raw.map((line) => ({ ...line, item: itemBySlug[line.slug] })).filter((line) => line.item && hasPrice(line.item))
     return {
       lines,
       count: lines.reduce((sum, line) => sum + line.qty, 0),
@@ -178,7 +178,7 @@ function CartDrawer() {
                 <span className="font-bold text-slate-500">Total</span>
                 <span className="text-2xl font-black">{formatPrice(total)} <span className="text-sm text-slate-400">MXN</span></span>
               </div>
-              <p className="mt-1 text-xs text-slate-400">IVA incluido · Entrega en Mérida sin costo</p>
+              <p className="mt-1 text-xs text-slate-400">Precios en pesos mexicanos. Te confirmamos entrega en Mérida.</p>
               <a
                 href={orderLink(lines)}
                 target="_blank"

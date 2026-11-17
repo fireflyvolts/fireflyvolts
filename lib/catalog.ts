@@ -1,4 +1,5 @@
 import type { ProductId } from './products'
+import { showPlaceholders } from './site-mode'
 
 /**
  * B2C store: equipment people buy without a site visit (under ~$70k).
@@ -338,6 +339,11 @@ export const catalog: StoreItem[] = [
 export const itemBySlug = Object.fromEntries(catalog.map((item) => [item.slug, item])) as Record<string, StoreItem>
 
 export const categoryById = Object.fromEntries(categories.map((category) => [category.id, category])) as Record<CategoryId, (typeof categories)[number]>
+
+/** Unconfirmed prices are hidden on production: those items are sold by asking on WhatsApp. */
+export function hasPrice(item: StoreItem) {
+  return showPlaceholders || !item.pricePlaceholder
+}
 
 export function formatPrice(value: number) {
   return `$${value.toLocaleString('es-MX')}`

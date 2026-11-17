@@ -1,5 +1,6 @@
 import { Award, Camera, Quote } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { showPlaceholders } from '@/lib/site-mode'
 
 /**
  * Placeholders for content we don't have yet (real photos, client logos, testimonials, confirmed figures).
@@ -7,6 +8,7 @@ import type { ReactNode } from 'react'
  */
 
 export function PlaceholderTag({ className = '' }: { className?: string }) {
+  if (!showPlaceholders) return null
   return (
     <span className={`inline-flex items-center rounded-full bg-lime-300 px-2 py-0.5 font-mono text-[10px] font-black uppercase tracking-[0.12em] text-slate-950 ${className}`}>
       Placeholder
@@ -15,6 +17,7 @@ export function PlaceholderTag({ className = '' }: { className?: string }) {
 }
 
 export function PhotoPlaceholder({ label, className = 'aspect-[4/3]' }: { label: string; className?: string }) {
+  if (!showPlaceholders) return null
   return (
     <figure className={`relative overflow-hidden rounded-[1.5rem] border-2 border-dashed border-lime-300 bg-[linear-gradient(135deg,#0b1f3a,#061224)] ${className}`}>
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,.05)_1px,transparent_1px)] bg-[size:32px_32px]" />
@@ -30,6 +33,7 @@ export function PhotoPlaceholder({ label, className = 'aspect-[4/3]' }: { label:
 
 /** Three photos under a heading: installs, equipment, team on site. */
 export function PhotoGallery({ eyebrow = 'En campo', title, photos }: { eyebrow?: string; title: string; photos: [string, string, string] }) {
+  if (!showPlaceholders) return null
   return (
     <section className="bg-white py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
@@ -54,6 +58,7 @@ const defaultStats = [
 
 /** Figures, client logos and a testimonial. All placeholder until confirmed. */
 export function ProofBar({ testimonial }: { testimonial?: { quote: string; author: string } }) {
+  if (!showPlaceholders) return null
   return (
     <section className="border-y border-slate-200 bg-white py-14">
       <div className="mx-auto max-w-7xl px-5 md:px-8">

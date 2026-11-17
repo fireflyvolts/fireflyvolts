@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { BatteryCharging, CloudLightning, Home, Laptop, PlugZap, ShieldCheck, Store, Sun, Tent, Timer, VolumeX, Zap } from 'lucide-react'
 import Link from 'next/link'
-import { formatPrice, itemBySlug } from '@/lib/catalog'
+import { formatPrice, hasPrice, itemBySlug } from '@/lib/catalog'
 import { PowerStationCalculator } from '@/components/calculators/power-station-calculator'
 import { DatasheetDownload } from '@/components/site/datasheet-download'
 import { PhotoGallery, PhotoPlaceholder, ProofBar } from '@/components/site/placeholders'
@@ -132,7 +132,7 @@ export default function EstacionesPage() {
                   className="mt-5 inline-flex h-11 items-center justify-between rounded-xl bg-slate-950 px-4 text-sm font-black text-white transition hover:bg-sky-600"
                 >
                   Comprar
-                  <span>{formatPrice(itemBySlug[`estacion-${item.model.replace('+', '').toLowerCase()}`].price)}</span>
+                  <span>{hasPrice(itemBySlug[`estacion-${item.model.replace('+', '').toLowerCase()}`]) ? formatPrice(itemBySlug[`estacion-${item.model.replace('+', '').toLowerCase()}`].price) : 'Ver precio'}</span>
                 </Link>
               </article>
             ))}

@@ -3,17 +3,24 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { MessageCircle, Minus, Plus, ShoppingBag } from 'lucide-react'
-import { categories, formatPrice, type CategoryId, type StoreItem } from '@/lib/catalog'
+import { categories, formatPrice, hasPrice, type CategoryId, type StoreItem } from '@/lib/catalog'
+import { showPlaceholders } from '@/lib/site-mode'
 import { PlaceholderTag } from '@/components/site/placeholders'
 import { orderLink, useCart } from './cart'
 
+const PHONE = '525585301886'
+
+function askPriceLink(item: StoreItem) {
+  return `https://wa.me/${PHONE}?text=${encodeURIComponent(`Hola, me interesa ${item.name} (${item.model}). ¿Me pasan precio y disponibilidad en Mérida?`)}`
+}
+
 export function ProductImage({ item, className = 'aspect-square' }: { item: StoreItem; className?: string }) {
   return (
-    <div className={`relative overflow-hidden rounded-[1.25rem] border-2 border-dashed border-lime-300 bg-[linear-gradient(135deg,#0b1f3a,#061224)] ${className}`}>
+    <div className={`relative overflow-hidden rounded-[1.25rem] ${showPlaceholders ? 'border-2 border-dashed border-lime-300' : 'border border-slate-200'} bg-[linear-gradient(135deg,#0b1f3a,#061224)] ${className}`}>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(14,165,233,.35),transparent_45%)]" />
       <PlaceholderTag className="absolute left-3 top-3" />
       <div className="relative flex h-full flex-col items-center justify-center p-4 text-center">
-        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/40">Foto</span>
+        {showPlaceholders && <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/40">Foto</span>}
         <span className="mt-1 text-sm font-black text-white/80">{item.model}</span>
       </div>
     </div>
@@ -21,6 +28,9 @@ export function ProductImage({ item, className = 'aspect-square' }: { item: Stor
 }
 
 export function Price({ item, size = 'md' }: { item: StoreItem; size?: 'md' | 'lg' }) {
+  if (!hasPrice(item)) {
+    return <span className={`font-black text-slate-950 ${size === 'lg' ? 'text-2xl' : 'text-lg'}`}>Precio por WhatsApp</span>
+  }
   return (
     <div className="flex flex-wrap items-center gap-2">
       <span className={`font-black tracking-[-0.03em] text-slate-950 ${size === 'lg' ? 'text-4xl' : 'text-2xl'}`}>
@@ -48,6 +58,7 @@ export function ProductCard({ item }: { item: StoreItem }) {
         <p className="mt-2 text-sm leading-6 text-slate-500">{item.summary}</p>
         <div className="mt-auto pt-4">
           <Price item={item} />
+          {hasPrice(item) ? (
           <button
             type="button"
             onClick={() => add(item.slug)}
@@ -56,6 +67,17 @@ export function ProductCard({ item }: { item: StoreItem }) {
             <ShoppingBag className="mr-2 h-4 w-4" />
             Agregar al carrito
           </button>
+          ) : (
+            <a
+              href={askPriceLink(item)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#25D366] text-sm font-black text-white transition hover:brightness-95"
+            >
+              <MessageCircle className="mr-2 h-4 w-4" />
+              Pedir precio
+            </a>
+          )}
         </div>
       </div>
     </article>
@@ -101,6 +123,19 @@ export function StoreGrid({ items, initial = 'todo' }: { items: StoreItem[]; ini
 export function BuyBox({ item }: { item: StoreItem }) {
   const { add } = useCart()
   const [qty, setQty] = useState(1)
+  if (!hasPrice(item)) {
+    return (
+      <a
+        href={askPriceLink(item)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex h-12 items-center justify-center rounded-xl bg-[#25D366] font-black text-white transition hover:brightness-95"
+      >
+        <MessageCircle className="mr-2 h-5 w-5" />
+        Pedir precio y disponibilidad
+      </a>
+    )
+  }
   return (
     <div className="grid gap-3">
       <div className="flex items-center gap-3">
@@ -147,7 +182,7 @@ export function StoreSuggestion({ item }: { item: StoreItem | undefined }) {
         <ShoppingBag className="h-5 w-5" />
         Comprar en la tienda
       </span>
-      <span>{formatPrice(item.price)}</span>
+      <span>{hasPrice(item) ? formatPrice(item.price) : 'Ver modelo'}</span>
     </Link>
   )
 }

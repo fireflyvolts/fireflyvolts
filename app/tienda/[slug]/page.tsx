@@ -7,7 +7,8 @@ import { PlaceholderTag } from '@/components/site/placeholders'
 import { DatasheetDownload } from '@/components/site/datasheet-download'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
-import { catalog, categoryById, formatPrice, itemBySlug } from '@/lib/catalog'
+import { catalog, categoryById, formatPrice, hasPrice, itemBySlug } from '@/lib/catalog'
+import { showPlaceholders } from '@/lib/site-mode'
 
 type Params = { params: Promise<{ slug: string }> }
 
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!item) return {}
   return {
     title: `${item.name} · ${item.model} | Tienda Firefly Volts`,
-    description: `${item.summary} ${formatPrice(item.price)} MXN con entrega en Mérida.`,
+    description: `${item.summary}${hasPrice(item) ? ` ${formatPrice(item.price)} MXN.` : ''} Entrega en Mérida.`,
     alternates: { canonical: `/tienda/${item.slug}` },
   }
 }
@@ -61,7 +62,7 @@ export default async function ProductPage({ params }: Params) {
             <p className="mt-4 text-lg leading-8 text-slate-600">{item.summary}</p>
             <div className="mt-6">
               <Price item={item} size="lg" />
-              <p className="mt-1 flex items-center gap-2 text-xs font-semibold text-slate-400">IVA incluido · Meses sin intereses <PlaceholderTag /></p>
+              {showPlaceholders && <p className="mt-1 flex items-center gap-2 text-xs font-semibold text-slate-400">IVA incluido · Meses sin intereses <PlaceholderTag /></p>}
             </div>
 
             <ul className="mt-6 grid gap-2">
@@ -77,7 +78,7 @@ export default async function ProductPage({ params }: Params) {
             </div>
 
             <div className="mt-6 grid gap-3 rounded-2xl bg-slate-50 p-5 text-sm">
-              <span className="flex items-center gap-3 font-semibold text-slate-700"><Truck className="h-5 w-5 text-sky-500" /> Entrega en Mérida en 24–48 h</span>
+              <span className="flex items-center gap-3 font-semibold text-slate-700"><Truck className="h-5 w-5 text-sky-500" /> Entrega en Mérida</span>
               <span className="flex items-center gap-3 font-semibold text-slate-700"><ShieldCheck className="h-5 w-5 text-sky-500" /> Garantía de fábrica Power-All</span>
               <span className="flex items-center gap-3 font-semibold text-slate-700"><MessageCircle className="h-5 w-5 text-sky-500" /> Soporte técnico por WhatsApp</span>
             </div>

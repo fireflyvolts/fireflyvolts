@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight, Building2, ShoppingBag } from 'lucide-react'
-import { catalog, formatPrice } from '@/lib/catalog'
+import { catalog, formatPrice, hasPrice } from '@/lib/catalog'
 import { PlaceholderTag } from '@/components/site/placeholders'
 
 const featured = ['estacion-mg13-1800li', 'ups-kr19-2kva', 'regulador-sms-3kva']
@@ -24,7 +24,7 @@ export function TwoDoors() {
             {featured.map((item) => (
               <Link key={item.slug} href={`/tienda/${item.slug}`} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-4 py-3 transition hover:border-sky-300 hover:bg-sky-50">
                 <span className="text-sm font-bold text-slate-800">{item.name}</span>
-                <span className="shrink-0 text-sm font-black text-slate-950">{formatPrice(item.price)}</span>
+                <span className="shrink-0 text-sm font-black text-slate-950">{hasPrice(item) ? formatPrice(item.price) : 'Ver precio'}</span>
               </Link>
             ))}
           </div>
