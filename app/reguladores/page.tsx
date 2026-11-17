@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Factory, Flame, Gauge, Home, ShieldAlert, ShieldCheck, Store, Timer, Waves, Zap } from 'lucide-react'
 import { RegulatorCalculator } from '@/components/calculators/regulator-calculator'
+import { DatasheetDownload } from '@/components/site/datasheet-download'
+import { PhotoGallery, ProofBar } from '@/components/site/placeholders'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
 import { CalculatorCard, FeatureGrid, LandingHero, QuoteSection, Section, SectionHeading, Steps } from '@/components/site/landing'
@@ -50,6 +52,8 @@ export default function ReguladoresPage() {
           }
         />
 
+        <ProofBar testimonial={{ quote: 'Antes cambiábamos una tarjeta de minisplit cada verano. Con el regulador llevamos dos temporadas sin una sola falla.', author: 'Nombre del cliente · Residencia en Mérida' }} />
+
         <Section tone="muted">
           <SectionHeading eyebrow="El problema" title="Lo que quema tus aires no es el calor." />
           <FeatureGrid items={problems} />
@@ -88,6 +92,10 @@ export default function ReguladoresPage() {
               ]}
             />
         </Section>
+
+        <PhotoGallery title="Reguladores trabajando en Mérida." photos={['Regulador servo instalado junto al tablero de una casa', 'Minisplits protegidos en azotea', 'Regulador trifásico comercial con display']} />
+
+        <DatasheetDownload product="reguladores" documents={['Ficha técnica reguladores servo SMS (1–15 kVA)', 'Ficha técnica reguladores comerciales CMS (10–30 kVA)', 'Ficha técnica supresores de picos']} />
 
         <QuoteSection
           product="reguladores"

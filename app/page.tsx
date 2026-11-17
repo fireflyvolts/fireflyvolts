@@ -22,6 +22,7 @@ import { NeedFinder } from '@/components/home/need-finder'
 import { OutageCalculator } from '@/components/home/outage-calculator'
 import { ProductCta } from '@/components/home/product-cta'
 import { QuoteForm } from '@/components/home/quote-form'
+import { PhotoGallery, ProofBar } from '@/components/site/placeholders'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
 import { products } from '@/lib/products'
@@ -100,6 +101,8 @@ export default function HomePage() {
             <NeedFinder />
           </div>
         </section>
+
+        <ProofBar testimonial={{ quote: 'Nos dijeron exactamente qué necesitábamos y por qué. Nada de vendernos el equipo más caro del catálogo.', author: 'Nombre del cliente · Hotel en Mérida' }} />
 
         {/* Products */}
         <section id="soluciones" className="scroll-mt-20 border-y border-slate-200 bg-slate-50 py-20 md:py-28">
@@ -240,6 +243,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        <PhotoGallery title="Instalaciones en Mérida y la península." photos={['Sistema BESS instalado en un hotel', 'UPS y regulador en el site de una clínica', 'Equipo Firefly en visita técnica']} />
 
         {/* Quote */}
         <section id="cotizar" className="relative scroll-mt-20 overflow-hidden bg-[#061224] py-20 text-white md:py-28">

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Activity, BatteryCharging, Hospital, PlugZap, ServerCog, ShieldCheck, Smartphone, Store, Thermometer, Zap } from 'lucide-react'
 import { UpsCalculator } from '@/components/calculators/ups-calculator'
+import { DatasheetDownload } from '@/components/site/datasheet-download'
+import { PhotoGallery, ProofBar } from '@/components/site/placeholders'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
 import { CalculatorCard, FeatureGrid, LandingHero, QuoteSection, Section, SectionHeading, Steps } from '@/components/site/landing'
@@ -65,6 +67,8 @@ export default function UpsPage() {
           }
         />
 
+        <ProofBar testimonial={{ quote: 'La planta podía caerse, pero el refrigerador de vacunas no. Desde que tenemos el UPS ni nos enteramos de los apagones.', author: 'Nombre del cliente · Clínica en Mérida' }} />
+
         <Section tone="muted">
           <SectionHeading eyebrow="El problema" title="El corte dura minutos. El daño, semanas." />
           <FeatureGrid items={reasons} />
@@ -95,6 +99,10 @@ export default function UpsPage() {
           <SectionHeading eyebrow="Aplicaciones" title="Donde un segundo sin luz cuesta." />
           <FeatureGrid items={applications} columns={4} />
         </Section>
+
+        <PhotoGallery title="UPS instalados, no en catálogo." photos={['UPS en línea instalado en el site de una clínica', 'Gabinete de baterías para respaldo extendido', 'Técnico haciendo la puesta en marcha']} />
+
+        <DatasheetDownload product="ups" documents={['Ficha técnica UPS en línea serie KR+19 (1–10 kVA)', 'Ficha técnica UPS bifásico serie FRUK19 (1–20 kVA)', 'Ficha técnica respaldo prolongado serie MG+13']} />
 
         <QuoteSection
           product="ups"

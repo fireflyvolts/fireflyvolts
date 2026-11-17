@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
 import { products } from '@/lib/products'
+import { WhatsAppButton } from './whatsapp-button'
 
 export function SiteFooter() {
   return (
     <footer className="bg-white py-14">
+      <WhatsAppButton />
       <div className="mx-auto grid max-w-7xl gap-10 px-5 text-sm text-slate-500 md:grid-cols-[1.2fr_1fr_1fr] md:px-8">
         <div>
           <Logo />

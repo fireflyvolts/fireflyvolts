@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Building2, Clock, Leaf, Paintbrush, Shield, Snowflake, Sofa, Sun, ThermometerSun } from 'lucide-react'
 import { PowerGlassCalculator } from '@/components/calculators/power-glass-calculator'
+import { DatasheetDownload } from '@/components/site/datasheet-download'
+import { PhotoGallery, ProofBar } from '@/components/site/placeholders'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
 import { CalculatorCard, FeatureGrid, LandingHero, QuoteSection, Section, SectionHeading, Steps } from '@/components/site/landing'
@@ -52,6 +54,8 @@ export default function PowerGlassPage() {
             </CalculatorCard>
           }
         />
+
+        <ProofBar testimonial={{ quote: 'La terraza era inhabitable en la tarde. Con la película los clientes ya se sientan junto a la ventana y el aire no trabaja de más.', author: 'Nombre del cliente · Restaurante en Mérida' }} />
 
         <Section tone="muted">
           <SectionHeading eyebrow="El problema" title="Tu negocio pierde dinero por las ventanas." text="Cambiar ventanas toma semanas, obra y cierre. Hay una forma más rápida." />
@@ -144,6 +148,10 @@ export default function PowerGlassPage() {
             ]}
           />
         </Section>
+
+        <PhotoGallery title="Antes y después." photos={['Fachada de vidrio con Power Glass instalado', 'Antes y después con cámara térmica', 'Instalador colocando la película']} />
+
+        <DatasheetDownload product="power-glass" documents={['Ficha técnica Power Glass', 'Ficha técnica Power Coat', 'Certificado de garantía de 10 años']} />
 
         <QuoteSection
           product="power-glass"

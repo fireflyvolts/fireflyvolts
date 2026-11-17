@@ -1,6 +1,8 @@
 'use client'
 
 import { FormEvent, useMemo, useState } from 'react'
+import { DatasheetDownload } from '@/components/site/datasheet-download'
+import { PhotoGallery, ProofBar } from '@/components/site/placeholders'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
 import { Button } from '@/components/ui/button'
@@ -362,6 +364,8 @@ export default function LandingPage() {
           </div>
         </section>
 
+        <ProofBar testimonial={{ quote: 'El análisis del recibo nos mostró cuánto pagábamos solo por el pico. El BESS se está pagando con ese ahorro.', author: 'Nombre del cliente · Hotel en la Riviera Maya' }} />
+
         <section className="border-b border-slate-200 bg-slate-50 py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-5 md:px-8">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-sky-600">El problema</p>
@@ -592,6 +596,10 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
+        <PhotoGallery title="BESS en operación." photos={['Gabinete BESS All-in-One instalado en exterior', 'Pantalla de monitoreo con el pico recortado', 'Conexión del BESS al tablero general']} />
+
+        <DatasheetDownload product="bess" documents={['Ficha técnica BESS All-in-One (100–160 kWh)', 'Ficha técnica BESS industrial modular (100 kVA–3.6 MVA)', 'Guía: cómo leer tu recibo de CFE']} />
 
         <section id="cotizar" className="relative overflow-hidden bg-[#061224] py-20 text-white md:py-28">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(132,204,22,.12),transparent_28%),linear-gradient(to_right,rgba(255,255,255,.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,.04)_1px,transparent_1px)] bg-[size:auto,48px_48px,48px_48px]" />

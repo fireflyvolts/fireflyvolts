@@ -34,7 +34,7 @@ export function LandingHero({
             <Icon className="h-4 w-4" />
             {eyebrow}
           </div>
-          <h1 className="mt-6 text-[2.6rem] font-black leading-[.96] tracking-[-0.045em] md:text-6xl lg:text-[4.2rem]">
+          <h1 className="mt-6 text-[2.4rem] font-black leading-[1] tracking-[-0.04em] md:text-5xl lg:text-[3.4rem]">
             {title} <span className="text-sky-400">{highlight}</span>
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-7 text-slate-600 md:text-xl md:leading-8">{lead}</p>

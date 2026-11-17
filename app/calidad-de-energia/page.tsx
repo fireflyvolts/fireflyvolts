@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Activity, ClipboardCheck, FileBarChart, Gauge, Hospital, Hotel, Factory, Search, Waves, Zap } from 'lucide-react'
 import { PowerQualityQuiz } from '@/components/calculators/power-quality-quiz'
+import { DatasheetDownload } from '@/components/site/datasheet-download'
+import { PhotoGallery, ProofBar } from '@/components/site/placeholders'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
 import { CalculatorCard, FeatureGrid, LandingHero, QuoteSection, Section, SectionHeading, Steps } from '@/components/site/landing'
@@ -44,6 +46,8 @@ export default function CalidadPage() {
           }
         />
 
+        <ProofBar testimonial={{ quote: 'El estudio encontró armónicos que nadie había visto. Corregimos eso y dejamos de quemar tarjetas de control.', author: 'Nombre del cliente · Planta en Yucatán' }} />
+
         <Section tone="muted">
           <SectionHeading eyebrow="Qué medimos" title="Lo que no se ve, pero se paga." text="Cuatro mediciones que explican la mayoría de los equipos dañados, disparos y recibos inflados." />
           <FeatureGrid items={measures} columns={4} />
@@ -71,6 +75,10 @@ export default function CalidadPage() {
           <FeatureGrid items={sectors} />
 
         </Section>
+
+        <PhotoGallery title="Así se ve un estudio en sitio." photos={['Analizador de redes conectado al tablero principal', 'Gráfica de armónicos del reporte', 'Ingeniero revisando la instalación']} />
+
+        <DatasheetDownload product="calidad" documents={['Ejemplo de reporte de calidad de energía', 'Alcance del estudio y entregables', 'Guía: cómo leer tu recibo de CFE']} />
 
         <QuoteSection
           product="calidad"
