@@ -13,7 +13,7 @@ import {
 import { Logo } from '@/components/logo'
 
 const pageUrl = 'https://www.fireflyvolts.com/que-es-peak-shaving'
-const diagnosticUrl = '/?utm_source=organic&utm_medium=seo&utm_campaign=peak_shaving_guide#diagnostico'
+const diagnosticUrl = '/bess?utm_source=organic&utm_medium=seo&utm_campaign=peak_shaving_guide#diagnostico'
 
 export const metadata: Metadata = {
   title: '¿Qué es peak shaving? Cómo reducir picos de demanda con BESS',
@@ -359,7 +359,7 @@ export default function PeakShavingGuidePage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 md:flex-row md:items-center md:justify-between md:px-8">
           <Logo />
           <div className="flex flex-wrap gap-5 text-sm font-semibold text-slate-600">
-            <Link href="/" className="hover:text-sky-600">Soluciones BESS</Link>
+            <Link href="/bess" className="hover:text-sky-600">Soluciones BESS</Link>
             <a href="mailto:ventas@fireflyvolts.com" className="hover:text-sky-600">ventas@fireflyvolts.com</a>
           </div>
         </div>
