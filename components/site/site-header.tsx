@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { ArrowRight, ChevronDown, Menu, X } from 'lucide-react'
 import { Logo } from '@/components/logo'
 import { products } from '@/lib/products'
+import { CartButton } from '@/components/store/cart'
 
 /** Header shared by the home and every product landing. "Cotizar" jumps to the page's own #cotizar form. */
 export function SiteHeader() {
@@ -40,14 +41,16 @@ export function SiteHeader() {
               </div>
             </div>
           </div>
+          <Link href="/tienda" className={`rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700 ${pathname.startsWith('/tienda') ? 'text-sky-700' : ''}`}>Tienda</Link>
           <Link href="/que-es-peak-shaving" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">Guía</Link>
           <Link href="/#como-trabajamos" className="rounded-md px-3 py-2 hover:bg-sky-50 hover:text-sky-700">Cómo trabajamos</Link>
         </nav>
 
         <div className="flex items-center gap-2">
+          <CartButton />
           <a
-            href="#cotizar"
-            className="inline-flex h-10 items-center rounded-md bg-sky-500 px-4 text-sm font-bold text-white transition hover:bg-sky-400"
+            href={pathname.startsWith('/tienda') ? '/#cotizar' : '#cotizar'}
+            className="inline-flex h-10 items-center rounded-md bg-sky-500 px-3 text-sm font-bold text-white transition hover:bg-sky-400 sm:px-4"
           >
             Cotizar
             <ArrowRight className="ml-2 h-4 w-4" />
@@ -67,6 +70,9 @@ export function SiteHeader() {
       {open && (
         <nav className="border-t border-slate-200 bg-white px-5 py-4 lg:hidden">
           <div className="grid gap-1">
+            <Link href="/tienda" onClick={() => setOpen(false)} className="rounded-xl bg-lime-300 px-3 py-3 font-black text-slate-950">
+              Tienda: compra directo
+            </Link>
             {products.map((product) => (
               <Link
                 key={product.id}

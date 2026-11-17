@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
 import { MetaPixel } from '@/components/meta-pixel'
+import { CartProvider } from '@/components/store/cart'
 import './globals.css'
 
 const geist = Geist({ subsets: ["latin"], variable: '--font-sans' });
@@ -80,7 +81,7 @@ gtag('config', 'AW-18325533736');`}
       </head>
       <body className="font-sans antialiased">
         <MetaPixel />
-        {children}
+        <CartProvider>{children}</CartProvider>
         <Analytics />
       </body>
     </html>

@@ -23,6 +23,7 @@ import { OutageCalculator } from '@/components/home/outage-calculator'
 import { ProductCta } from '@/components/home/product-cta'
 import { QuoteForm } from '@/components/home/quote-form'
 import { PhotoGallery, ProofBar } from '@/components/site/placeholders'
+import { TwoDoors } from '@/components/home/two-doors'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
 import { products } from '@/lib/products'
@@ -86,7 +87,7 @@ export default function HomePage() {
                   href="#soluciones"
                   className="inline-flex h-14 items-center rounded-xl bg-slate-950 px-6 font-black text-white transition hover:bg-slate-800"
                 >
-                  Ver las 5 soluciones
+                  Ver soluciones
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </a>
                 <a
@@ -102,6 +103,8 @@ export default function HomePage() {
           </div>
         </section>
 
+        <TwoDoors />
+
         <ProofBar testimonial={{ quote: 'Nos dijeron exactamente qué necesitábamos y por qué. Nada de vendernos el equipo más caro del catálogo.', author: 'Nombre del cliente · Hotel en Mérida' }} />
 
         {/* Products */}
@@ -111,7 +114,7 @@ export default function HomePage() {
               <div>
                 <p className="text-sm font-bold uppercase tracking-[0.2em] text-sky-600">Soluciones</p>
                 <h2 className="mt-4 max-w-3xl text-4xl font-black tracking-[-0.035em] md:text-6xl">
-                  Cinco soluciones. Una sola llamada.
+                  Seis soluciones. Una sola llamada.
                 </h2>
               </div>
               <p className="max-w-md leading-7 text-slate-600">
@@ -144,7 +147,7 @@ export default function HomePage() {
                 </div>
               </article>
 
-              {rest.map((product) => (
+              {rest.filter((product) => !product.isNew).map((product) => (
                 <article
                   key={product.id}
                   className="flex flex-col rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-sky-200 hover:shadow-xl hover:shadow-sky-950/10"
@@ -159,6 +162,34 @@ export default function HomePage() {
                   </div>
                   <div className="mt-auto flex items-center justify-between gap-3 pt-5">
                     <span className="text-xs font-semibold text-slate-400">{product.audience.join(' · ')}</span>
+                    <ProductCta product={product} />
+                  </div>
+                </article>
+              ))}
+
+              {rest.filter((product) => product.isNew).map((product) => (
+                <article
+                  key={product.id}
+                  className="relative grid gap-6 overflow-hidden rounded-[1.5rem] border-2 border-lime-300 bg-white p-6 shadow-sm md:col-span-2 md:grid-cols-[auto_1fr_auto] md:items-center md:p-8 lg:col-span-4"
+                >
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#061224]">
+                    <BatteryCharging className="h-8 w-8 text-lime-300" />
+                  </div>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="rounded-full bg-lime-300 px-3 py-1 text-xs font-black text-slate-950">Nuevo</span>
+                      <span className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-slate-400">{product.eyebrow}</span>
+                    </div>
+                    <h3 className="mt-3 text-2xl font-black leading-tight">
+                      {product.name}. <span className="text-sky-500">{product.headline}</span>
+                    </h3>
+                    <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">{product.description}</p>
+                  </div>
+                  <div className="flex flex-col items-start gap-3 md:items-end">
+                    <span className="flex items-center gap-2 rounded-xl bg-sky-50 px-3 py-2 text-xs font-bold text-sky-700">
+                      <Calculator className="h-4 w-4 shrink-0" />
+                      {product.tool}
+                    </span>
                     <ProductCta product={product} />
                   </div>
                 </article>

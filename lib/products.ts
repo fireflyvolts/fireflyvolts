@@ -1,4 +1,4 @@
-export type ProductId = 'bess' | 'ups' | 'reguladores' | 'calidad' | 'power-glass'
+export type ProductId = 'bess' | 'ups' | 'estaciones' | 'reguladores' | 'calidad' | 'power-glass'
 
 export type Product = {
   id: ProductId
@@ -11,6 +11,8 @@ export type Product = {
   /** Landing route. Products without one send the visitor to the home form. */
   href?: string
   ticket: 'Proyecto' | 'Cierre rápido' | 'Diagnóstico'
+  /** Shown as a wide "Nuevo" card on the home. */
+  isNew?: boolean
 }
 
 export const products: Product[] = [
@@ -73,6 +75,19 @@ export const products: Product[] = [
     tool: 'Calculadora de ROI por m²',
     href: '/power-glass',
     ticket: 'Proyecto',
+  },
+  {
+    id: 'estaciones',
+    name: 'Estaciones de energía portátiles',
+    eyebrow: '06 · Portátil',
+    headline: 'Respaldo sin instalación: conecta y listo.',
+    description:
+      'Baterías LiFePO4 de 512 a 3,840 Wh con contactos, USB-C y función UPS. Se recargan con la luz o con paneles solares. Para casa, home office y negocio.',
+    audience: ['Hogar', 'Home office', 'Comercios'],
+    tool: '¿Cuántas horas me aguanta?',
+    href: '/estaciones-de-energia',
+    ticket: 'Cierre rápido',
+    isNew: true,
   },
 ]
 

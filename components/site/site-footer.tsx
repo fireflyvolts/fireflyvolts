@@ -25,6 +25,7 @@ export function SiteFooter() {
         <div>
           <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Contacto</p>
           <div className="mt-4 grid gap-2 font-semibold">
+            <Link href="/tienda" className="hover:text-sky-600">Tienda</Link>
             <a href="mailto:ventas@fireflyvolts.com" className="hover:text-sky-600">ventas@fireflyvolts.com</a>
             <a href="https://wa.me/525585301886" className="hover:text-sky-600">WhatsApp 55 8530 1886</a>
             <Link href="/que-es-peak-shaving" className="hover:text-sky-600">Guía de peak shaving</Link>

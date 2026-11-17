@@ -4,6 +4,8 @@ import { useMemo, useState } from 'react'
 import { ArrowRight, Minus, Plus } from 'lucide-react'
 import { ResultPanel } from '@/components/site/landing'
 import { selectProduct } from '@/components/home/select-product'
+import { StoreSuggestion } from '@/components/store/store-ui'
+import { itemBySlug } from '@/lib/catalog'
 
 /** Typical running watts per device. Compressor loads are flagged because they need an online UPS with headroom. */
 const devices = [
@@ -143,6 +145,7 @@ export function UpsCalculator() {
           </>
         }
       >
+        <StoreSuggestion item={result.kva && result.kva <= 3 && result.series.includes('KR+19') ? itemBySlug[`ups-kr19-${result.kva}kva`] : undefined} />
         <button
           type="button"
           disabled={watts === 0}

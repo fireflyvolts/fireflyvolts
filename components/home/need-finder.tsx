@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Flame, PlugZap, ReceiptText, Snowflake, Zap } from 'lucide-react'
+import { ArrowRight, BatteryCharging, Flame, PlugZap, ReceiptText, Snowflake, Zap } from 'lucide-react'
 import { productById, type ProductId } from '@/lib/products'
 import { selectProduct } from './select-product'
 
@@ -18,6 +18,12 @@ const needs: { id: ProductId; label: string; icon: typeof Zap; why: string }[] =
     label: 'Los apagones me paran la operación',
     icon: PlugZap,
     why: 'Un UPS de doble conversión mantiene vivos tus equipos críticos mientras regresa la luz.',
+  },
+  {
+    id: 'estaciones',
+    label: 'Quiero respaldo en casa sin instalar nada',
+    icon: BatteryCharging,
+    why: 'Una estación de energía portátil mantiene refri, ventiladores e internet durante el apagón. Llega cargada y se conecta a la pared.',
   },
   {
     id: 'reguladores',

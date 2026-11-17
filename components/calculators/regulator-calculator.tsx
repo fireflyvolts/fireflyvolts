@@ -4,6 +4,15 @@ import { useMemo, useState } from 'react'
 import { ArrowRight, Minus, Plus } from 'lucide-react'
 import { ResultPanel } from '@/components/site/landing'
 import { selectProduct } from '@/components/home/select-product'
+import { StoreSuggestion } from '@/components/store/store-ui'
+import { itemBySlug } from '@/lib/catalog'
+
+/** Small single-phase regulators are sold in the store; the rest are quoted. */
+function regulatorItem(result: { kva: number | null; series: string }) {
+  if (result.series.includes('SMS PHV') && result.kva === 5) return itemBySlug['regulador-sms-phv-5kva']
+  if (result.series === 'Servo monofásico · Serie SMS' && (result.kva === 1 || result.kva === 3)) return itemBySlug[`regulador-sms-${result.kva}kva`]
+  return undefined
+}
 
 /** Approximate apparent power per load, kVA. Minisplit values cover conventional and inverter units. */
 const loads = [
@@ -110,6 +119,7 @@ export function RegulatorCalculator() {
           </>
         }
       >
+        <StoreSuggestion item={regulatorItem(result)} />
         <button
           type="button"
           disabled={connected === 0}
